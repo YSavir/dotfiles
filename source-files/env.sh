@@ -3,3 +3,5 @@ export PG_USER='Yaniv'
 
 export APP_ENV="development"
 
+alias serveThis='ruby -run -e httpd . -p 9090'
+

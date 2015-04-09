@@ -5,10 +5,10 @@ rvm_bin_path=/Users/Yaniv/.rvm/bin
 source_files='auths.sh '\
 'env.sh '\
 'git.sh '\
+'rails.sh '\
 'utils.sh'
 
 for source_file in $source_files; do
-  echo "sourcing $source_file"
   source ~/dotfiles/source-files/$source_file
 done 
 
