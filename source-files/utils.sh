@@ -19,7 +19,7 @@ makeMe () {
    fi
 }
 
-function goCode(){
+goCode(){
   cd ~/Documents/coding
   for var in "$@"
   do
@@ -29,47 +29,47 @@ function goCode(){
   done  
 }
 
-function goWorking(){
+goWorking(){
   cd ~/Documents/professional_needs/$1
 }
 
-function goOvermen(){
+goOvermen(){
   cd ~/Documents/games/overmen
 }
 
 ### Copy JS files to Current Directory
-function getRaphael(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/raphael.js .
+getRaphael(){
+  cp /Users/Yaniv/Documents/coding/resources/js/raphael.js .
   echo "Fetched Raphael"
 }
 
-function getjQuery(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/jquery-1.11.0.js .
+getjQuery(){
+  cp /Users/Yaniv/Documents/coding/resources/js/jquery-1.11.0.js .
   echo "Fetched jQuery"
 }
 
-function getUnderscore(){
+getUnderscore(){
+  cp /Users/Yaniv/Documents/coding/resources/js/underscore.js .
+  echo "Fetched Underscore"
+}
+
+getBackbone(){
   jquery="jquery-*.js"
   if [[ ! -e $jquery ]]
   then
     getjQuery
   fi
-  cp /Users/Yaniv/Documents/coding/resources/js_files/underscore.js .
-  echo "Fetched Underscore"
-}
-
-function getBackbone(){
   underscore="underscore.js"
   if [[ ! -e $underscore ]]
   then
     getUnderscore
   fi
-  cp /Users/Yaniv/Documents/coding/resources/js_files/backbone.js .
+  cp /Users/Yaniv/Documents/coding/resources/js/backbone.js .
   echo "Fetched Backbone"
 }
 
 getAngular(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/angular.js .
+  cp /Users/Yaniv/Documents/coding/resources/js/angular.js .
   echo "Fetched Angular"
 }
 
@@ -79,38 +79,38 @@ getAngularResource(){
   then
     getAngular
   fi
-  cp /Users/Yaniv/Documents/coding/resources/js_files/angular-resource.js .
+  cp /Users/Yaniv/Documents/coding/resources/js/angular-resource.js .
   echo "Fetched Angular Resource"
 }
 
 getFirebase(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/firebase.js .
+  cp /Users/Yaniv/Documents/coding/resources/js/firebase.js .
 }
 
-function getMocha(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/mocha.js .
+getMocha(){
+  cp /Users/Yaniv/Documents/coding/resources/js/mocha.js .
   echo "Fetched Mocha"
 }
 
 
-function getHandlebars(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/handlebars.js .
-  cp /Users/Yaniv/Documents/coding/resources/js_files/handlebars_helpers.js .
+getHandlebars(){
+  cp /Users/Yaniv/Documents/coding/resources/js/handlebars.js .
+  cp /Users/Yaniv/Documents/coding/resources/js/handlebars_helpers.js .
   echo "Fetched Handlebars and helpers"
 }
 
-function getGrips(){
+getGrips(){
   cp /Users/Yaniv/Documents/coding/my_projects/libraries/grips/lib/grips.js .
   echo 'fetched Grips'
 }
 
 getD3(){
-  cp /Users/Yaniv/Documents/coding/resources/js_files/d3.js .
+  cp /Users/Yaniv/Documents/coding/resources/js/d3.js .
   echo "Fetched D3"
 }
 
 ### Copy frameworks to current directory
-function getEmberStarterKit(){
+getEmberStarterKit(){
   cp /Users/Yaniv/Documents/coding/coding_resources/frameworks/ember_starter-kit-1.4.0/README.md .
   cp /Users/Yaniv/Documents/coding/coding_resources/frameworks/ember_starter-kit-1.4.0/index.html .
   cp -r /Users/Yaniv/Documents/coding/coding_resources/frameworks/ember_starter-kit-1.4.0/js .
@@ -118,7 +118,7 @@ function getEmberStarterKit(){
   cp -r /Users/Yaniv/Documents/coding/coding_resources/frameworks/ember_starter-kit-1.4.0/tests .
 }
 
-function getBootstrap(){
+getBootstrap(){
   cp -r /Users/Yaniv/Documents/coding/resources/css/twitter_bootstrap/css/ ./stylesheets
   cp -r /Users/Yaniv/Documents/coding/resources/css/twitter_bootstrap/js/ ./javascripts
   cp -r /Users/Yaniv/Documents/coding/resources/css/twitter_bootstrap/fonts/ ./fonts
@@ -128,7 +128,7 @@ function getBootstrap(){
   echo "Fetched Bootstrap."
 }
 
-function getFoundation(){
+getFoundation(){
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/foundation-5.0.3/css/ ./stylesheets
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/foundation-5.0.3/img/ ./images
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/foundation-5.0.3/js/ ./javascripts
@@ -136,12 +136,12 @@ function getFoundation(){
   rm /js/foundation.min.js
 }
 
-function getSkeleton(){
+getSkeleton(){
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/skeleton/dhg-Skeleton-7ab6820/images ./images
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/skeleton/dhg-Skeleton-7ab6820/stylesheets ./stylesheets
 }
 
-function getSkeleton1200(){
+getSkeleton1200(){
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/skeleton/dhg-Skeleton-7ab6820/images ./images
   cp -r /Users/Yaniv/Documents/coding/coding_resources/css_files/skeleton/dhg-Skeleton-7ab6820/stylesheets ./stylesheets
   rm stylesheets/skeleton.css
@@ -150,7 +150,7 @@ function getSkeleton1200(){
 
 # Handlebars
 
-function precHB(){
+precHB(){
   handlebars -m $1 -f $2
 }
 
