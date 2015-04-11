@@ -4,6 +4,8 @@ alias ll='ls -la'
 alias getbash='vim ~/.bash_profile'
 alias setbash='source ~/.bash_profile'
 alias kitty='cat /Users/Yaniv/Pictures/ascii/kitty.txt; echo ""'
+alias chrome='open -a "Google Chrome"'
+alias firefox='open -a "Firefox"'
 
 export CLICOLOR=1
 export LSCOLORS=GxFxCxDxBxegedabagaced
@@ -38,6 +40,15 @@ goOvermen(){
 }
 
 ### Copy JS files to Current Directory
+
+getJSDependency(){
+  echo $1
+  if [[ ! -e $1 ]]
+  then
+    cp /Users/Yaniv/Documents/coding/resources/js/$1 .
+  fi
+}
+
 getRaphael(){
   cp /Users/Yaniv/Documents/coding/resources/js/raphael.js .
   echo "Fetched Raphael"
@@ -54,16 +65,10 @@ getUnderscore(){
 }
 
 getBackbone(){
-  jquery="jquery-*.js"
-  if [[ ! -e $jquery ]]
-  then
-    getjQuery
-  fi
-  underscore="underscore.js"
-  if [[ ! -e $underscore ]]
-  then
-    getUnderscore
-  fi
+  dependencies='jquery-1.11.0.js underscore.js' 
+  for dependency in $dependencies; do
+    getJSDependency "$dependecy";
+  done 
   cp /Users/Yaniv/Documents/coding/resources/js/backbone.js .
   echo "Fetched Backbone"
 }
