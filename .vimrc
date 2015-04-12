@@ -3,6 +3,7 @@ syntax on
 filetype plugin on
 
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+autocmd vimenter * NERDTree
 
 set omnifunc=syntaxcomplete#Complete
 set number
