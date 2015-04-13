@@ -5,7 +5,7 @@ filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd vimenter * NERDTree
 
-set omnifunc=syntaxcomplete#Complete
+set omnifunc=htmlcomplete#CompleteTags
 set number
 set sw=2
 set smartindent
@@ -27,6 +27,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'ervandew/supertab'
+Bundle 'mattn/emmet-vim'
 
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
@@ -42,3 +43,5 @@ filetype plugin indent on    " required
 "
 " see :h vundle for more details or wiki for FAQ
 " Put your non-Plugin stuff after this line
+"
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif

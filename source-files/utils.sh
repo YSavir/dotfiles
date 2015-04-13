@@ -21,14 +21,31 @@ makeMe () {
    fi
 }
 
+breadth_first(){
+  i=0
+  while results=$(find . -mindepth $i -maxdepth $i -name "$1") && [[ -n $results ]]; do
+    echo "$results"
+    ((i++))
+  done
+}
+
+breadth_find(){
+  i=0
+  while results=$(find . -mindepth $i -maxdepth $i -name "$1" -print -quit); do
+    if [[ -n $results ]]; then
+      echo $results;
+      return 0
+    else
+      ((i++))
+    fi
+  done
+}
+
 goCode(){
-  cd ~/Documents/coding/$1
-#  for var in "$@"
-#  do
-#    echo "searching for $var"
-#    find -type d -printf '%d\t%P\n'| sort -r -nk1 | cut -f2 | xargs echo
-#    #cd $(find . -depth 1 -name $var -type d)
-#  done  
+  cd ~/Documents/coding/
+  for var in $@; do
+    cd $(breadth_find $var)
+  done
 }
 
 goWorking(){
