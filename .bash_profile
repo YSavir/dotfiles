@@ -14,8 +14,4 @@ for source_file in $source_files; do
   source ~/dotfiles/source-files/$source_file
 done 
 
-export TWILIO_ACCOUNT_SID=AC9777483a86e4fccefab938be2801e8bf
-export TWILIO_AUTH_TOKEN=626c4b863a9c2a1c4798c73bd366b260
-
-
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
