@@ -1,27 +1,27 @@
 getReact(){
-  mv /Users/Yaniv/Documents/coding/resources/js/react.js .
+  mv /Users/Yaniv/Documents/coding/inhouse/resources/js/react.js .
 }
 
 getJSDependency(){
   echo $1
   if [[ ! -e $1 ]]
   then
-    cp /Users/Yaniv/Documents/coding/resources/js/$1 .
+    cp /Users/Yaniv/Documents/coding/inhouse/resources/js/$1 .
   fi
 }
 
 getRaphael(){
-  cp /Users/Yaniv/Documents/coding/resources/js/raphael.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/raphael.js .
   echo "Fetched Raphael"
 }
 
 getjQuery(){
-  cp /Users/Yaniv/Documents/coding/resources/js/jquery-1.11.0.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/jquery-1.11.0.js .
   echo "Fetched jQuery"
 }
 
 getUnderscore(){
-  cp /Users/Yaniv/Documents/coding/resources/js/underscore.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/underscore.js .
   echo "Fetched Underscore"
 }
 
@@ -30,12 +30,12 @@ getBackbone(){
   for dependency in $dependencies; do
     getJSDependency "$dependecy";
   done 
-  cp /Users/Yaniv/Documents/coding/resources/js/backbone.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/backbone.js .
   echo "Fetched Backbone"
 }
 
 getAngular(){
-  cp /Users/Yaniv/Documents/coding/resources/js/angular.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/angular.js .
   echo "Fetched Angular"
 }
 
@@ -45,23 +45,23 @@ getAngularResource(){
   then
     getAngular
   fi
-  cp /Users/Yaniv/Documents/coding/resources/js/angular-resource.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/angular-resource.js .
   echo "Fetched Angular Resource"
 }
 
 getFirebase(){
-  cp /Users/Yaniv/Documents/coding/resources/js/firebase.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/firebase.js .
 }
 
 getMocha(){
-  cp /Users/Yaniv/Documents/coding/resources/js/mocha.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/mocha.js .
   echo "Fetched Mocha"
 }
 
 
 getHandlebars(){
-  cp /Users/Yaniv/Documents/coding/resources/js/handlebars.js .
-  cp /Users/Yaniv/Documents/coding/resources/js/handlebars_helpers.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/handlebars.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/handlebars_helpers.js .
   echo "Fetched Handlebars and helpers"
 }
 
@@ -71,7 +71,7 @@ getGrips(){
 }
 
 getD3(){
-  cp /Users/Yaniv/Documents/coding/resources/js/d3.js .
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/d3.js .
   echo "Fetched D3"
 }
 
@@ -85,9 +85,9 @@ getEmberStarterKit(){
 }
 
 getBootstrap(){
-  cp -r /Users/Yaniv/Documents/coding/resources/css/twitter_bootstrap/css/ ./stylesheets
-  cp -r /Users/Yaniv/Documents/coding/resources/css/twitter_bootstrap/js/ ./javascripts
-  cp -r /Users/Yaniv/Documents/coding/resources/css/twitter_bootstrap/fonts/ ./fonts
+  cp -r /Users/Yaniv/Documents/coding/inhouse/resources/css/twitter_bootstrap/css/ ./stylesheets
+  cp -r /Users/Yaniv/Documents/coding/inhouse/resources/css/twitter_bootstrap/js/ ./javascripts
+  cp -r /Users/Yaniv/Documents/coding/inhouse/resources/css/twitter_bootstrap/fonts/ ./fonts
   rm ./stylesheets/bootstrap-theme.min.css
   rm ./stylesheets/bootstrap.min.css
   rm ./javascripts/bootstrap.min.js
