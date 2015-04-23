@@ -5,6 +5,8 @@ filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd vimenter * NERDTree
 
+:let mapleader = ','
+
 set omnifunc=htmlcomplete#CompleteTags
 set number
 set sw=2
@@ -51,3 +53,7 @@ filetype plugin indent on    " required
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 nmap <Leader>\ :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
+
+nmap <Leader>. :tabn<CR>
+nmap <Leader>, :tabp<CR>
+nmap <Leader>p :CtrlP<CR>
