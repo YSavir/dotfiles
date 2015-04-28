@@ -19,3 +19,19 @@ resetDB(){
   echo "...done"
   echo "Database reset"
 }
+
+mkdirView(){
+  for dir in "$@"; do
+    mkdir app/views/"$dir"
+    echo "made directory app/views/$1"
+  done
+}
+
+mkview(){
+  view_dir=$1
+  shift
+  for view in "$@"; do
+    touch app/views/"$view_dir"/"$view".html.erb;
+    echo "creating view $view_dir/$view"
+  done
+}
