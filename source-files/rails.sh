@@ -29,6 +29,9 @@ mkdirView(){
 
 mkview(){
   view_dir=$1
+  if [ ! -d "app/views/$1" ]; then
+    mkdirView "$1"
+  fi
   shift
   for view in "$@"; do
     touch app/views/"$view_dir"/"$view".html.erb;
