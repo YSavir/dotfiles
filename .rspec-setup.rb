@@ -1,18 +1,5 @@
-require 'database_cleaner'
+# require 'database_cleaner'
 
 RSpec.configure do |config|
   config.backtrace_exclusion_patterns << /gems/
-
-  config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
-  end
 end
