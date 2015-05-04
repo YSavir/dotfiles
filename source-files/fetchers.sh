@@ -1,78 +1,64 @@
 getJSResource(){
-  if [[ ! -e $1 ]]
-  then
-    cp "/Users/Yaniv/Documents/coding/inhouse/resources/js/$1" .
-    echo "Fetched $1"
-  fi
+  for resource in $@; do
+    if [[ ! -e $resource ]]
+    then
+      cp "/Users/Yaniv/Documents/coding/inhouse/resources/js/$resource.js" .
+      echo "Fetched $resource"
+    fi
+  done
 }
 
 getRaphael(){
-  getJSResource raphael.js
+  getJSResource raphael
 }
 
 getBackbone(){
-  dependencies='jquery-1.11.0.js underscore.js' 
-  for dependency in $dependencies; do
-    getJSDependency $dependency;
-  done 
-  getJSResource backbone.js
+  getJSResource jquery underscore backbone
 }
 
 getBackboneFilter(){
-  bb='backbone.js'
-  if [[ ! -e $bb ]]; then
-    getBackbone
-  fi
-  getJSResource backbone-router-filter.js
+  getBackbone
+  getJSResource backbone-route-filter
 }
 
 getReact(){
-  getJSResource react.js
+  getJSResource react
 }
 
 getAngular(){
-  getJSResource angular.js
+  getJSResource angular
 }
 
 getAngularResource(){
-  dependencies="angular.js"
-  for dependency in $dependencies; do
-    getJSDependency $dependency;
-  done 
-  getJSResource angular-resources.js
+  getJSResource angular 
+  getJSResource angular-resources
 }
 
 getFirebase(){
-  getJSResource firebase.js
+  getJSResource firebase
 }
 
 getMocha(){
-  getJSResource mocha.js
+  getJSResource mocha
 }
 
 
 getHandlebars(){
-  getJSResource handelbars.js
+  getJSResource handelbars
 }
 
 getHandlebarsHelpers(){
-  dependencies='handlebars.js'
-  for dependency in $dependencies; do
-    getJSResource $dependency
-  done
-  getJSResource handlebars_helpers.js
+  getJSResource handlebars
+  getJSResource handlebars_helpers
 }
 
 getGrips(){
-  dependencies='handlebars.js'
-  for dependency in $dependencies; do
-    getJSResource $dependency
-  done
-  getJSResource grips.js
+  getJSResource handlebars
+  getJSResource grips
 }
 
 getD3(){
-  getJSResource d3.js
+  getJSResource d3
 }
 
 ### Copy frameworks to current directory
