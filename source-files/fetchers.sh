@@ -1,8 +1,4 @@
-getReact(){
-  mv /Users/Yaniv/Documents/coding/inhouse/resources/js/react.js .
-}
-
-getJSDependency(){
+getJSResource(){
   if [[ ! -e $1 ]]
   then
     cp "/Users/Yaniv/Documents/coding/inhouse/resources/js/$1" .
@@ -11,8 +7,7 @@ getJSDependency(){
 }
 
 getRaphael(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/raphael.js .
-  echo "Fetched Raphael"
+  getJSResource raphael.js
 }
 
 getBackbone(){
@@ -20,8 +15,7 @@ getBackbone(){
   for dependency in $dependencies; do
     getJSDependency $dependency;
   done 
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/backbone.js .
-  echo "Fetched Backbone"
+  getJSResource backbone.js
 }
 
 getBackboneFilter(){
@@ -29,49 +23,56 @@ getBackboneFilter(){
   if [[ ! -e $bb ]]; then
     getBackbone
   fi
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/backbone-route-filter.js .
-  echo "Fetched backbone route filter"
+  getJSResource backbone-router-filter.js
+}
+
+getReact(){
+  getJSResource react.js
 }
 
 getAngular(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/angular.js .
-  echo "Fetched Angular"
+  getJSResource angular.js
 }
 
 getAngularResource(){
-  angular="angular.js"
-  if [[ ! -e $angular ]]
-  then
-    getAngular
-  fi
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/angular-resource.js .
-  echo "Fetched Angular Resource"
+  dependencies="angular.js"
+  for dependency in $dependencies; do
+    getJSDependency $dependency;
+  done 
+  getJSResource angular-resources.js
 }
 
 getFirebase(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/firebase.js .
+  getJSResource firebase.js
 }
 
 getMocha(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/mocha.js .
-  echo "Fetched Mocha"
+  getJSResource mocha.js
 }
 
 
 getHandlebars(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/handlebars.js .
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/handlebars_helpers.js .
-  echo "Fetched Handlebars and helpers"
+  getJSResource handelbars.js
+}
+
+getHandlebarsHelpers(){
+  dependencies='handlebars.js'
+  for dependency in $dependencies; do
+    getJSResource $dependency
+  done
+  getJSResource handlebars_helpers.js
 }
 
 getGrips(){
-  cp /Users/Yaniv/Documents/coding/my_projects/libraries/grips/lib/grips.js .
-  echo 'fetched Grips'
+  dependencies='handlebars.js'
+  for dependency in $dependencies; do
+    getJSResource $dependency
+  done
+  getJSResource grips.js
 }
 
 getD3(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/d3.js .
-  echo "Fetched D3"
+  getJSResource d3.js
 }
 
 ### Copy frameworks to current directory
