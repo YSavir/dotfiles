@@ -30,8 +30,7 @@ getAngular(){
 }
 
 getAngularResource(){
-  getJSResource angular 
-  getJSResource angular-resources
+  getJSResource angular angular-resources
 }
 
 getFirebase(){
@@ -48,13 +47,11 @@ getHandlebars(){
 }
 
 getHandlebarsHelpers(){
-  getJSResource handlebars
-  getJSResource handlebars_helpers
+  getJSResource handlebars handlebars_helpers
 }
 
 getGrips(){
-  getJSResource handlebars
-  getJSResource grips
+  getJSResource handlebars grips
 }
 
 getD3(){
