@@ -33,6 +33,14 @@ breadth_find(){
   done
 }
 
+go(){
+  cd ~/
+  for dir in $@; do
+    cd $(breadth_find $dir)
+  done
+}
+
+
 # Handlebars
 
 precHB(){
