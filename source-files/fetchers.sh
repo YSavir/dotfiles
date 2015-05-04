@@ -1,61 +1,47 @@
-getJSResource(){
+get(){
+  if [ ! $2 ]
+  then
+    echo "Error -- Must pass both type of resource and resource name";
+    return    
+  fi
+
+  resource_directory=$1
+
+  if [[ ! -e /Users/Yaniv/Documents/coding/inhouse/resources/$resource_directory ]]
+  then
+    echo "Error --  No such resource directory"
+    return
+  fi
+
+  shift
   for resource in $@; do
     if [[ ! -e $resource ]]
     then
-      cp "/Users/Yaniv/Documents/coding/inhouse/resources/js/$resource.js" .
+      cp "/Users/Yaniv/Documents/coding/inhouse/resources/$resource_directory/$resource.js" .
       echo "Fetched $resource"
     fi
   done
 }
 
-getRaphael(){
-  getJSResource raphael
-}
-
 getBackbone(){
-  getJSResource jquery underscore backbone
+  get js jquery underscore backbone
 }
 
 getBackboneFilter(){
   getBackbone
-  getJSResource backbone-route-filter
-}
-
-getReact(){
-  getJSResource react
-}
-
-getAngular(){
-  getJSResource angular
+  get js backbone-route-filter
 }
 
 getAngularResource(){
-  getJSResource angular angular-resources
-}
-
-getFirebase(){
-  getJSResource firebase
-}
-
-getMocha(){
-  getJSResource mocha
-}
-
-
-getHandlebars(){
-  getJSResource handelbars
+  get js angular angular-resources
 }
 
 getHandlebarsHelpers(){
-  getJSResource handlebars handlebars_helpers
+  get js handlebars handlebars_helpers
 }
 
 getGrips(){
-  getJSResource handlebars grips
-}
-
-getD3(){
-  getJSResource d3
+  get js handlebars grips
 }
 
 ### Copy frameworks to current directory
