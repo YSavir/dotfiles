@@ -3,10 +3,10 @@ getReact(){
 }
 
 getJSDependency(){
-  echo $1
   if [[ ! -e $1 ]]
   then
-    cp /Users/Yaniv/Documents/coding/inhouse/resources/js/$1 .
+    cp "/Users/Yaniv/Documents/coding/inhouse/resources/js/$1" .
+    echo "Fetched $1"
   fi
 }
 
@@ -15,23 +15,22 @@ getRaphael(){
   echo "Fetched Raphael"
 }
 
-getjQuery(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/jquery-1.11.0.js .
-  echo "Fetched jQuery"
-}
-
-getUnderscore(){
-  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/underscore.js .
-  echo "Fetched Underscore"
-}
-
 getBackbone(){
   dependencies='jquery-1.11.0.js underscore.js' 
   for dependency in $dependencies; do
-    getJSDependency "$dependecy";
+    getJSDependency $dependency;
   done 
   cp /Users/Yaniv/Documents/coding/inhouse/resources/js/backbone.js .
   echo "Fetched Backbone"
+}
+
+getBackboneFilter(){
+  bb='backbone.js'
+  if [[ ! -e $bb ]]; then
+    getBackbone
+  fi
+  cp /Users/Yaniv/Documents/coding/inhouse/resources/js/backbone-route-filter.js .
+  echo "Fetched backbone route filter"
 }
 
 getAngular(){
