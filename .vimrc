@@ -2,6 +2,7 @@
 syntax on
 filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
+au BufReadPost *.hbs set syntax=html
 
 set omnifunc=htmlcomplete#CompleteTags
 set number
