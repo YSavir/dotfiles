@@ -4,6 +4,7 @@ filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au BufReadPost *.hbs set syntax=html
 
+set directory=$HOME/.vim/swapfiles
 set omnifunc=htmlcomplete#CompleteTags
 set number
 set sw=2
@@ -36,6 +37,7 @@ Bundle 'mattn/emmet-vim'
 Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-surround'
+Bundle 'pangloss/vim-javascript'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
