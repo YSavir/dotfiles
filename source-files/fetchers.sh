@@ -5,7 +5,7 @@ get(){
     return    
   fi
 
-  resource_directory=$1
+  resource_type=$1
 
   if [[ ! -e /Users/Yaniv/Documents/coding/inhouse/resources/$resource_directory ]]
   then
@@ -17,7 +17,7 @@ get(){
   for resource in $@; do
     if [[ ! -e $resource ]]
     then
-      cp "/Users/Yaniv/Documents/coding/inhouse/resources/$resource_directory/$resource.js" .
+      cp "/Users/Yaniv/Documents/coding/inhouse/resources/$resource_type/$resource.$resource_type" .
       echo "Fetched $resource"
     fi
   done
