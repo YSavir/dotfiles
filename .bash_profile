@@ -7,7 +7,6 @@ source_files='auths.sh '\
 'git.sh '\
 'rails.sh '\
 'utils.sh '\
-'movers.sh '\
 'fetchers.sh '
 
 for source_file in $source_files; do
