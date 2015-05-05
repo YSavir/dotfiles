@@ -13,7 +13,9 @@ set autoindent
 set tabstop=2
 set expandtab
 set nocompatible              " be iMproved, required
-set mouse=a
+
+set textwidth=80
+set colorcolumn=+1
 
 filetype off                  " required
 
