@@ -27,6 +27,10 @@ nmap <Leader>, :tabp<CR>
 map <Leader>p :CtrlP<CR>
 nmap <Leader>\ :NERDTreeToggle<CR>
 
+" remap ESC to Ctrl-E in insert and visual modes
+inoremap <C-E> <Esc>
+vnoremap <C-E> <Esc>
+
 " VUNDLER and PLUGINS
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
@@ -45,5 +49,8 @@ call vundle#end()            " required
 filetype plugin indent on    " required
 
 " NERD TREE
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeShowHidden=1
+
+" CTRLP
+set wildignore+=*/tmp/*,*.so,*.swp,*.zip
