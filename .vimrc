@@ -24,7 +24,6 @@ filetype off                  " required
 
 nmap <Leader>. :tabn<CR>
 nmap <Leader>, :tabp<CR>
-map <Leader>p :CtrlP<CR>
 nmap <Leader>\ :NERDTreeToggle<CR>
 
 " remap ESC to Ctrl-E in insert and visual modes
