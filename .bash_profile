@@ -7,7 +7,9 @@ source_files='auths.sh '\
 'git.sh '\
 'rails.sh '\
 'utils.sh '\
-'fetchers.sh '
+'fetchers.sh '\
+'games.sh'
+
 
 for source_file in $source_files; do
   source ~/dotfiles/source-files/$source_file
