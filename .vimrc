@@ -25,7 +25,7 @@ filetype off                  " required
 :let mapleader = ','
 
 nmap <Leader>. :tabn<CR>
-nmap <Leader>, :tabp<CR>
+nmap <Leader>m :tabp<CR>
 nmap <Leader>\ :NERDTreeToggle<CR>
 
 " remap ESC to Ctrl-E in insert and visual modes
