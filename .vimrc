@@ -16,6 +16,8 @@ set nocompatible              " be iMproved, required
 
 set textwidth=80
 set colorcolumn=+1
+set nolist
+set formatoptions-=t
 
 filetype off                  " required
 
