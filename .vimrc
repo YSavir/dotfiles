@@ -28,10 +28,6 @@ nmap <Leader>. :tabn<CR>
 nmap <Leader>m :tabp<CR>
 nmap <Leader>\ :NERDTreeToggle<CR>
 
-" remap ESC to Ctrl-E in insert and visual modes
-inoremap <C-E> <Esc>
-vnoremap <C-E> <Esc>
-
 " VUNDLER and PLUGINS
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
