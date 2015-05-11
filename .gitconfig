@@ -1,0 +1,13 @@
+[user]
+	name = Yaniv Savir
+	email = saviry@gmail.com
+[credential]
+	helper = cache
+[core]
+	editor = vim
+	excludesfile = /Users/Yaniv/.gitignore
+[color "status"]
+	added = green
+  deleted = magenta
+  untracked = yellow
+  changed = blue
