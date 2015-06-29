@@ -1,3 +1,5 @@
+Pry.config.editor = 'vim'
+
 require 'pry-bloodline'
 
 PryBloodline.setup!
@@ -9,5 +11,3 @@ PryBloodline.configure do |c|
   c.separator = "☯"
 end
 
-
-Pry.config.editor = 'vim'
