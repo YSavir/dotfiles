@@ -1,13 +1,14 @@
 get(){
+  resourcesRoot="/Users/Yaniv/Documents/coding/inhouse/resources"
   if [ ! $2 ]
   then
-    echo "Error -- Must pass both type of resource and resource name";
+    echo "Error -- Must pass both resource language and resource name";
     return    
   fi
 
   resource_type=$1
 
-  if [[ ! -e /Users/Yaniv/Documents/coding/inhouse/resources/$resource_directory ]]
+  if [[ ! -e $resourcesRoot/$resource_directory ]]
   then
     echo "Error --  No such resource directory"
     return
@@ -17,7 +18,7 @@ get(){
   for resource in $@; do
     if [[ ! -e $resource ]]
     then
-      cp "/Users/Yaniv/Documents/coding/inhouse/resources/$resource_type/$resource.$resource_type" .
+      cp $resourcesRoot/$resource_type/$resource.$resource_type .
       echo "Fetched $resource"
     fi
   done
