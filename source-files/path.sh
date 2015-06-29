@@ -19,4 +19,5 @@ export PATH=$PATH:/Users/Yaniv/.rvm/gems/ruby-2.0.0-p247@global/bin
 export PATH=$PATH:/opt/X11/bin
 export PATH=$PATH:/Applications/Postgres93.app/Contents/MacOS/bin
 export PATH=$PATH:/Users/Yaniv/.wdi/command_line_tools/bin
+export PATH=$PATH:/usr/local/heroku/bin
 
