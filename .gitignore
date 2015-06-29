@@ -1,3 +1,4 @@
 source-files/auths.sh
 source-files/games.sh
+source-files/path.sh
 *.sw
