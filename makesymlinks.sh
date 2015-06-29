@@ -4,24 +4,32 @@
 
 dir=~/dotfiles
 olddir=~/dotfiles_old
-files=".bash_profile .bashrd .pryrc .vimrc .zshrc .guard.rb .rspec .rspec-setup.rb .gitconfig .gitignore"
-
-##############
 
 # Create dotfiles_old in homdir for backup
-echo "Creating $olddir for backup of any existing dotfiles in ~"
-mkdir -p $olddir
-echo "...done"
+if [ ! -d $olddir ]; then
+  echo "Creating $olddir for backup of any existing dotfiles in ~"
+  mkdir -p $olddir
+fi
 
-#change to the dotfiles directory
-echo "Changing to the $dir directory"
-cd $dir
-echo "...done"
+# find all hidden files in $dir
+dotFiles=$(find $dir -name '.*'  -maxdepth 1 -type f)
 
 # move any existing dotfiles in homdir to dotfiles_old then create symlinks
-for file in $files; do
-  echo "Moving any existing dotfiles form ~ to $olddir"
-  mv ~/$file ~/dotfiles_old/
-  echo "Creating symlinks to $file in home directory"
-  ln -s $dir/$file ~/$file
+for file in $dotFiles; do
+  fileName=$(basename $file)
+  
+  # backup old file if exists
+  if [ -f ~/$fileName ]; then
+    # and remove old backup if exists
+    if [ -f $olddir/$fileName ]; then
+      rm $olddir/$fileName
+    fi
+
+    echo -n "backing up and "
+    mv -f ~/$fileName $olddir
+  fi
+
+  echo "creating symlink for $fileName"
+  ln -s $dir/$fileName ~/$fileName
 done
+
