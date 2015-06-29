@@ -8,7 +8,8 @@ source_files='auths.sh '\
 'rails.sh '\
 'utils.sh '\
 'fetchers.sh '\
-'games.sh'
+'games.sh '\
+'prompt.sh'
 
 
 for source_file in $source_files; do
