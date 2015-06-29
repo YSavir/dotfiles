@@ -4,6 +4,14 @@ alias rg='rails g'
 alias rr='rake routes'
 alias rt='rake -T'
 
+rSetup(){
+  if [ -z $1 ]; then
+    echo 'Error-- No name provided for Rails application'
+    return 1
+  fi
+  rails new $1 -Td postgresql
+}
+
 resetDB(){
   echo "dropping database..."
   rake db:drop
