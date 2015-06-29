@@ -4,7 +4,7 @@
 
 dir=~/dotfiles
 olddir=~/dotfiles_old
-files=".bash_profile .bashrd .pryrc .vimrc .zshrc .guard.rb .rspec .rspec-setup.rb"
+files=".bash_profile .bashrd .pryrc .vimrc .zshrc .guard.rb .rspec .rspec-setup.rb .gitconfig .gitignore"
 
 ##############
 
