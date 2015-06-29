@@ -15,22 +15,18 @@ rSetup(){
 resetDB(){
   echo "dropping database..."
   rake db:drop
-  echo "...done"
   echo "creating database..."
   rake db:create
-  echo "...done"
   echo "migrating database..."
   rake db:migrate
-  echo "...done"
   echo "seeding database..."
   rake db:seed
-  echo "...done"
-  echo "Database reset"
+  echo "database has been reset"
 }
 
 mkdirView(){
   for dir in "$@"; do
-    mkdir app/views/"$dir"
+    mkdir ./app/views/"$dir"
     echo "made directory app/views/$1"
   done
 }
@@ -40,6 +36,7 @@ mkview(){
   if [ ! -d "app/views/$1" ]; then
     mkdirView "$1"
   fi
+
   shift
   for view in "$@"; do
     touch app/views/"$view_dir"/"$view".html.erb;
