@@ -1,8 +1,13 @@
 "##### PREP and FORMATTING #####
+
+set nocompatible              " be iMproved, required
+
 syntax on
 filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au BufReadPost *.hbs set syntax=html
+au BufRead,BufNewFile *.html set wrap
+au BufRead,BufNewFile *.rb,*.js set textwidth=80 colorcolumn=+1
 
 set directory=$HOME/.vim/swapfiles
 set omnifunc=htmlcomplete#CompleteTags
@@ -12,12 +17,13 @@ set smartindent
 set autoindent
 set tabstop=2
 set expandtab
-set nocompatible              " be iMproved, required
 
-set textwidth=80
-set colorcolumn=+1
-set nolist
-set formatoptions-=t
+" set textwidth=80
+" set colorcolumn=+1
+"set wrap
+"set linebreak
+"set nolist
+"set formatoptions-=t
 
 filetype off                  " required
 
@@ -41,6 +47,9 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-surround'
 Bundle 'pangloss/vim-javascript'
+Bundle 'plasticboy/vim-markdown'
+Bundle 'suan/vim-instant-markdown'
+Bundle 'jaxbot/browserlink.vim.git'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -51,3 +60,5 @@ let NERDTreeShowHidden=1
 
 " CTRLP
 set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+let g:ctrlp_show_hidden = 1 "show hidden files
+
