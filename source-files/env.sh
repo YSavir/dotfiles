@@ -11,6 +11,6 @@ export RBENV_ROOT="${HOME}/.rebenv"
 
 if [ -d $RBENV_ROOT ]; then
   export PATH="${PATH}:${RBENV_ROOT}/bin"
-  eval $(rbenv init -)"
+  eval "$(rbenv init -)"
 fi
   
