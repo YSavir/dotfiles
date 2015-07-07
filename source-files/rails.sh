@@ -17,8 +17,8 @@ resetDB(){
   rake db:drop
   echo "creating database..."
   rake db:create
-  echo "migrating database..."
-  rake db:migrate
+  echo "setting up database..."
+  rake db:schema:load
   echo "seeding database..."
   rake db:seed
   echo "database has been reset"
