@@ -1,10 +1,8 @@
-source_files='auths '\
-'env '\
+source_files='env '\
 'git '\
 'rails '\
 'utils '\
 'fetchers '\
-'games '\
 'prompt'
 
 for source_file in $source_files; do
