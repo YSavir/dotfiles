@@ -25,6 +25,14 @@ set expandtab
 "set nolist
 "set formatoptions-=t
 
+"##### Search and Orientation #####
+
+set incsearch
+set hlsearch
+set ignorecase
+set smartcase
+noh
+
 function! NumberToggle()
   if(&relativenumber == 1)
     set number
