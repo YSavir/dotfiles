@@ -78,6 +78,6 @@ filetype plugin indent on    " required
 let NERDTreeShowHidden=1
 
 " CTRLP
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+set wildignore+=*/node_modules/*,*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_show_hidden = 1 "show hidden files
 
