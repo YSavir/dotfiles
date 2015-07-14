@@ -43,3 +43,9 @@ go(){
 precHB(){
   handlebars -m $1 -f $2
 }
+
+# Tree
+
+## Skip NPM files
+
+alias tree="tree -I 'node_modules|package.json|npm-debug.log'"
