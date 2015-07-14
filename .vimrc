@@ -68,6 +68,7 @@ Bundle 'pangloss/vim-javascript'
 Bundle 'plasticboy/vim-markdown'
 Bundle 'suan/vim-instant-markdown'
 Bundle 'jaxbot/browserlink.vim.git'
+Bundle 'tpope/vim-fugitive.git'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
