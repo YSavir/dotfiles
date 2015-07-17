@@ -8,7 +8,7 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au BufReadPost *.hbs set syntax=html
 au BufRead,BufNewFile *.html set wrap
 au BufRead,BufNewFile *.rb,*.js set textwidth=80 colorcolumn=+1
-au BufReadPost *.ccss set syntax=css
+au BufReadPost *.ccss set syntax=scss
 
 set directory=$HOME/.vim/swapfiles
 set omnifunc=htmlcomplete#CompleteTags
