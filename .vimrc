@@ -10,6 +10,7 @@ au BufRead,BufNewFile *.html set wrap
 au BufRead,BufNewFile *.rb,*.js set textwidth=80 colorcolumn=+1
 au BufReadPost *.ccss set syntax=scss
 
+
 set directory=$HOME/.vim/swapfiles
 set omnifunc=htmlcomplete#CompleteTags
 set number
@@ -42,7 +43,27 @@ function! NumberToggle()
   endif
 endfunc
 
+function! ToggleComment()
+  " Set comment character based on filetype
+  if &filetype ==? 'ruby'
+    let commentChar = "#"
+  elseif &filetype ==? 'vim'
+    let commentChar = '"'
+  endif
+  let line = getline('.')
+  let matcher = '^\s*'.eval('commentChar')
+  let isComment = matchstr(line, matcher)
+
+  if (empty(isComment))
+    execute 's/\(^\s*\)/\1'.eval('commentChar').' '
+  else
+    let uncomment = '\(^\s*\)'.eval('commentChar').'\s\='
+    execute 's/' . uncomment . '/\1/'
+  endif
+endfunc
+
 nnoremap <C-n> :call NumberToggle()<cr>
+nnoremap <C-l> :call ToggleComment()<cr>
 
 filetype off                  " required
 
