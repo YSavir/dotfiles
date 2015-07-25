@@ -48,4 +48,4 @@ precHB(){
 
 ## Skip NPM files
 
-alias tree="tree -I 'node_modules|package.json|npm-debug.log'"
+alias tree="tree -I 'node_modules'"
