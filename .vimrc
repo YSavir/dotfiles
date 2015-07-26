@@ -4,6 +4,7 @@ set nocompatible              " be iMproved, required
 
 syntax on
 filetype plugin on
+set ruler
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au BufReadPost *.hbs set syntax=html
 au BufRead,BufNewFile *.html set wrap
