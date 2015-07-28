@@ -50,6 +50,8 @@ function! ToggleComment()
     let commentChar = "#"
   elseif &filetype ==? 'vim'
     let commentChar = '"'
+  elseif &filetype ==? 'javascript'
+    let commentChar = '\/\/'
   endif
   let line = getline('.')
   let matcher = '^\s*'.eval('commentChar')
