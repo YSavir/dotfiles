@@ -41,7 +41,7 @@ go(){
 # Handlebars
 
 precHB(){
-  handlebars -m $1 -f $2
+  handlebars -e hbs -m $1 -f $2
 }
 
 # Tree
