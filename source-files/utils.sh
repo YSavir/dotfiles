@@ -37,6 +37,21 @@ go(){
   done
 }
 
+..(){
+  isNumber='^[0-9]+$'
+  COUNTER="0"
+  if [[ "$#" -eq "0" ]] || [[ ! $1 =~ $isNumber ]] ; then
+    END='1'
+  else
+    END="$1"
+  fi
+  echo $END
+  while [ "$COUNTER" -lt "$END" ]; do
+    cd ..
+    let COUNTER=COUNTER+1
+  done
+}
+
 
 # Handlebars
 
