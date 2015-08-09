@@ -45,7 +45,6 @@ go(){
   else
     END="$1"
   fi
-  echo $END
   while [ "$COUNTER" -lt "$END" ]; do
     cd ..
     let COUNTER=COUNTER+1
