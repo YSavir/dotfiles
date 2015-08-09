@@ -3,6 +3,7 @@ source_files='env '\
 'rails '\
 'utils '\
 'fetchers '\
+'path '\
 'prompt'
 
 for source_file in $source_files; do
