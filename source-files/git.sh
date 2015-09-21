@@ -7,4 +7,5 @@ alias gComm='git commit -m'
 alias gAdd='git add -A'
 alias gBranch='git checkout -b'
 alias gp='git push'
-
+alias gco='git checkout'
+alias prettyGraph='git log --oneline --graph --all --decorate --abbrev-commit'
