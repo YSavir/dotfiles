@@ -43,3 +43,7 @@ mkview(){
     echo "creating view $view_dir/$view"
   done
 }
+
+compileTestTemplates() {
+ handlebars app/assets/javascripts/templates/ -m -f test/indexes/javascripts/templates.js -n "HandlebarsTemplates" -e hbs 
+}
