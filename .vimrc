@@ -1,6 +1,8 @@
 "##### PREP and FORMATTING #####
 
 set nocompatible              " be iMproved, required
+set noswapfile
+set breakindent
 
 syntax on
 filetype plugin on
@@ -20,13 +22,7 @@ set smartindent
 set autoindent
 set tabstop=2
 set expandtab
-
-" set textwidth=80
-" set colorcolumn=+1
-"set wrap
-"set linebreak
-"set nolist
-"set formatoptions-=t
+set backspace=2
 
 "##### Search and Orientation #####
 
