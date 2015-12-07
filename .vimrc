@@ -2,7 +2,6 @@
 
 set nocompatible              " be iMproved, required
 set noswapfile
-set breakindent
 
 syntax on
 filetype plugin on
@@ -90,6 +89,7 @@ Bundle 'plasticboy/vim-markdown'
 Bundle 'suan/vim-instant-markdown'
 Bundle 'jaxbot/browserlink.vim.git'
 Bundle 'tpope/vim-fugitive.git'
+Bundle 'nathanaelkane/vim-indent-guides'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
@@ -102,3 +102,4 @@ let NERDTreeShowHidden=1
 set wildignore+=*/node_modules/*,*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_show_hidden = 1 "show hidden files
 
+set breakindent
