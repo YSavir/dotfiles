@@ -5,12 +5,17 @@ set noswapfile
 
 syntax on
 filetype plugin on
-set ruler
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 au BufReadPost *.hbs set syntax=html
 au BufRead,BufNewFile *.html set wrap
 au BufRead,BufNewFile *.rb,*.js set textwidth=80 colorcolumn=+1
 au BufReadPost *.ccss set syntax=scss
+
+" status line
+set laststatus=2
+set statusline=%f
+set statusline+=\:
+set statusline+=%l\,\%v
 
 
 set directory=$HOME/.vim/swapfiles

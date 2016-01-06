@@ -5,6 +5,9 @@ export APP_ENV="development"
 
 alias serveThis='ruby -run -e httpd . -p 9090'
 
+### EDITOR
+export EDITOR="/usr/bin/vim"
+
 ### RBENV
 
 export RBENV_ROOT="${HOME}/.rebenv"
