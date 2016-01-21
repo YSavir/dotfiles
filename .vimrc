@@ -36,6 +36,8 @@ set ignorecase
 set smartcase
 noh
 
+set fdm=indent
+
 function! NumberToggle()
   if(&relativenumber == 1)
     set nornu
