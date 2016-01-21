@@ -37,6 +37,7 @@ set smartcase
 noh
 
 set fdm=indent
+set nofoldenable
 
 function! NumberToggle()
   if(&relativenumber == 1)
