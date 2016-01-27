@@ -3,6 +3,7 @@ alias rs='rails s'
 alias rg='rails g'
 alias rr='rake routes'
 alias rt='rake -T'
+alias be="bundle exec"
 
 rSetup(){
   if [ -z $1 ]; then
