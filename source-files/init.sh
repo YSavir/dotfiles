@@ -8,7 +8,7 @@ source_files='env '\
 'work'
 
 for source_file in $source_files; do
-  file="~/dotfiles/source-files/$source_file.sh"
+  file=~/dotfiles/source-files/$source_file.sh
   if [ -e "$file" ]
   then
     source "$file"
