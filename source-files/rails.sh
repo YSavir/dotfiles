@@ -1,9 +1,14 @@
 alias rc='rails c'
 alias rs='rails s'
+alias trs='RAILS_ENV=test rs'
 alias rg='rails g'
+
+alias be="bundle exec"
+
 alias rr='be rake routes'
 alias rt='be rake -T'
-alias be="bundle exec"
+alias jw='be rake jobs:work'
+alias tjw='RAILS_ENV=test jw'
 
 rSetup(){
   if [ -z $1 ]; then
