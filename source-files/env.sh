@@ -13,7 +13,7 @@ export EDITOR="/usr/bin/vim"
 export RBENV_ROOT="${HOME}/.rebenv"
 
 if [ -d $RBENV_ROOT ]; then
-  export PATH="${PATH}:${RBENV_ROOT}/bin"
+  export PATH="${RBENV_ROOT}/bin:${PATH}"
   eval "$(rbenv init -)"
 fi
   

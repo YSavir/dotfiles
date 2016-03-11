@@ -106,6 +106,10 @@ filetype plugin indent on    " required
 " autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 let NERDTreeShowHidden=1
 
+"##### Autocomplete
+set wildmode=longest,list
+set wildmenu
+
 " CTRLP
 set wildignore+=*/node_modules/*,*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_show_hidden = 1 "show hidden files

@@ -1,6 +1,7 @@
 alias rc='rails c'
 alias rs='rails s'
-alias trs='RAILS_ENV=test rs'
+alias trs='RAILS_ENV=test bundle exec rails s'
+alias tjw='RAILS_ENV=test bundle exec rake jobs:work'
 alias rg='rails g'
 
 alias be="bundle exec"
