@@ -1,2 +1,3 @@
 -r ~/.rspec-setup.rb
 --color
+--profile
