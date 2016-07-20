@@ -5,6 +5,7 @@ source_files='env '\
 'fetchers '\
 'path '\
 'prompt '\
+'git-completion '\
 'work'
 
 for source_file in $source_files; do

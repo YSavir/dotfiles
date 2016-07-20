@@ -6,6 +6,7 @@
 [core]
 	editor = vim
 	excludesfile = /Users/Yaniv/.gitignore
+	pager = diff-so-fancy | less --tabs=4 -RFX
 [color "status"]
 	added = green
   deleted = magenta
