@@ -55,6 +55,10 @@ function! ToggleComment()
     let commentChar = '"'
   elseif &filetype ==? 'javascript'
     let commentChar = '\/\/'
+  elseif &filetype ==? 'css' || &filetype ==? 'scss'
+    let commentChar = '\/\/'
+  else
+    let commentChar = ''
   endif
   let line = getline('.')
   let matcher = '^\s*'.eval('commentChar')
