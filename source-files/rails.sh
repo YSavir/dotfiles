@@ -54,3 +54,40 @@ mkview(){
 compileTestTemplates() {
  handlebars app/assets/javascripts/templates/ -m -f test/indexes/javascripts/templates.js -n "HandlebarsTemplates" -e hbs 
 }
+
+findUnusedassets(){
+  files=$(ls $1)
+
+  for file in $files; do
+    # remove extension three times, for .css.scss.erb files
+    nameWithoutExtension="${file%.*}"
+    nameWithoutExtension="${nameWithoutExtension%.*}"
+    nameWithoutExtension="${nameWithoutExtension%.*}"
+
+    # remove "_" to prevent css inclusions from not counting
+    cleanName=${nameWithoutExtension/#_/}
+    if [ "$(grep -r $cleanName app | wc -l)" -eq 0 ]; then
+      echo "$file"
+    fi
+  done
+}
+
+removeUnusedAssets(){
+  files=$(ls $1)
+
+  for file in $files; do
+    # remove extension three times, for .css.scss.erb files
+    nameWithoutExtension="${file%.*}"
+    nameWithoutExtension="${nameWithoutExtension%.*}"
+    nameWithoutExtension="${nameWithoutExtension%.*}"
+
+    # remove "_" to prevent css inclusions from not counting
+    cleanName=${nameWithoutExtension/#_/}
+    if [ "$(grep -r $cleanName app | wc -l)" -eq 0 ]; then
+      if [ -f "$1/$file" ]; then
+        echo "Removing $1/$file"
+        rm "$1/$file"
+      fi
+    fi
+  done
+}
