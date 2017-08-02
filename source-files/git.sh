@@ -8,3 +8,15 @@ alias gAdd='git add -A'
 alias gBranch='git checkout -b'
 alias gp='git push'
 alias prettyGraph='git log --oneline --graph --all --decorate --abbrev-commit'
+
+gSave(){
+  git stash save $*
+}
+
+gApply(){
+  git stash apply stash^{/$*};
+}
+
+gShow(){
+  git stash show stash^{/$*}; 
+}
