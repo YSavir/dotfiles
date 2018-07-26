@@ -104,6 +104,7 @@ Bundle 'suan/vim-instant-markdown'
 Bundle 'jaxbot/browserlink.vim.git'
 Bundle 'tpope/vim-fugitive.git'
 Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'godlygeek/tabular'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
