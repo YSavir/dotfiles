@@ -91,6 +91,7 @@ call vundle#begin()
 
 Plugin 'gmarik/Vundle.vim'
 Plugin 'posva/vim-vue'
+Plugin 'yssl/QFEnter'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'ervandew/supertab'
@@ -121,6 +122,11 @@ set wildmenu
 " CTRLP
 set wildignore+=*/node_modules/*,*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_show_hidden = 1 "show hidden files
+
+" QFEnter
+" open quickfix links in new tab
+let g:qfenter_keymap = {}
+let g:qfenter_keymap.topen = ['<C-t>']
 
 " Vim-Grepper
 let g:grepper = {}
