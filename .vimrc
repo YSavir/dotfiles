@@ -9,7 +9,7 @@ autocmd BufNewFile,BufReadPost *.md set filetype=markdown
 autocmd BufNewFile,BufReadPost *.jbuilder set filetype=ruby
 au BufReadPost *.hbs set syntax=html
 au BufRead,BufNewFile *.html set wrap
-au BufRead,BufNewFile *.rb,*.js setlocal textwidth=80 colorcolumn=+1
+au BufRead,BufNewFile *.rb,*.js setlocal textwidth=120 colorcolumn=+1
 au BufReadPost *.ccss set syntax=scss
 
 " status line
@@ -107,6 +107,7 @@ Bundle 'tpope/vim-fugitive.git'
 Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'godlygeek/tabular'
 Bundle 'mhinz/vim-grepper'
+Bundle 'jparise/vim-graphql'
 
 call vundle#end()            " required
 filetype plugin indent on    " required
