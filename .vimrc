@@ -137,5 +137,5 @@ set breakindent
 
 " Tabular
 vmap <Leader>t; :Tabularize /:\zs/l0l1<CR>
-vmap <Leader>t= :Tabularize /=
+vmap <Leader>t= :Tabularize /=<CR>
 vmap <Leader>t, :Tabularize /,\zs/l0l1<CR>

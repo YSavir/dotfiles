@@ -3,6 +3,7 @@ alias rs='rails s'
 alias trs='RAILS_ENV=test bundle exec rails s'
 alias tjw='RAILS_ENV=test bundle exec rake jobs:work'
 alias rg='rails g'
+alias wds='./bin/webpack-dev-server'
 
 alias be="bundle exec"
 
