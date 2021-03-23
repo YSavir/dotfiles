@@ -17,6 +17,9 @@ set laststatus=2
 set statusline=%f
 set statusline+=\:
 set statusline+=%l\,\%v
+" status line color based on input mode
+au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
+au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 
 
 set directory=$HOME/.vim/swapfiles
@@ -136,7 +139,12 @@ let g:grepper.tools = ['ag']
 set breakindent
 
 " Tabular
-vmap <Leader>t; :Tabularize /:\zs/l0l1<CR>
 vmap <Leader>t= :Tabularize /=<CR>
 vmap <Leader>t, :Tabularize /,\zs/l0l1<CR>
 vmap <Leader>tf, :Tabularize /^[^,]*,\zs<CR>
+
+vmap <Leader>t; :Tabularize /:\zs/l0l1<CR>
+vmap <Leader>tf; :Tabularize /^[^:]*:\zs/l0l1<CR>
+vmap <Leader>ta; :Tabularize /[\w]*:\zs/l0l1<CR>
+
+vmap <Leader>t} :Tabularize /}/l1l0<CR>
