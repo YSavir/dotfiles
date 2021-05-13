@@ -89,8 +89,7 @@ filetype off                  " required
 
 nmap <Leader>. :tabn<CR>
 nmap <Leader>m :tabp<CR>
-nmap <Leader>\ :NERDTreeToggle<CR>
-nmap <Leader>c :set cursorline!<CR>
+nmap <Leader>\ :set cursorline!<CR>
 
 " VUNDLER and PLUGINS
 set rtp+=~/.vim/bundle/Vundle.vim
