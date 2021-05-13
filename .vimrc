@@ -21,6 +21,9 @@ set statusline+=%l\,\%v
 au InsertEnter * hi StatusLine term=reverse ctermbg=5 gui=undercurl guisp=Magenta
 au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 
+" highlight current line
+:hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
+
 
 set directory=$HOME/.vim/swapfiles
 set omnifunc=htmlcomplete#CompleteTags
@@ -87,6 +90,7 @@ filetype off                  " required
 nmap <Leader>. :tabn<CR>
 nmap <Leader>m :tabp<CR>
 nmap <Leader>\ :NERDTreeToggle<CR>
+nmap <Leader>c :set cursorline!<CR>
 
 " VUNDLER and PLUGINS
 set rtp+=~/.vim/bundle/Vundle.vim
@@ -147,4 +151,5 @@ vmap <Leader>t; :Tabularize /:\zs/l0l1<CR>
 vmap <Leader>tf; :Tabularize /^[^:]*:\zs/l0l1<CR>
 vmap <Leader>ta; :Tabularize /[\w]*:\zs/l0l1<CR>
 
+vmap <Leader>t{ :Tabularize /{/l1l1<CR>
 vmap <Leader>t} :Tabularize /}/l1l0<CR>
