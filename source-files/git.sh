@@ -20,3 +20,7 @@ gApply(){
 gShow(){
   git stash show stash^{/$*}; 
 }
+
+gChangedFiles() {
+  git diff $1 $2 --name-only
+}
