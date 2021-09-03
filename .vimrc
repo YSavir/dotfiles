@@ -54,7 +54,7 @@ function! NumberToggle()
   endif
 endfunc
 
-function! CursoeLineToggle()
+function! CursorLineToggle()
   if(&cursorline == 1)
     set nocursorline
   else
@@ -88,7 +88,7 @@ function! ToggleComment()
 endfunc
 
 nnoremap <C-n> :call NumberToggle()<cr>
-nnoremap <C-c> :call CursoeLineToggle()<cr>
+nnoremap <C-w> :call CursorLineToggle()<cr>
 nnoremap <C-l> :call ToggleComment()<cr>
 
 filetype off                  " required
@@ -98,7 +98,6 @@ filetype off                  " required
 
 nmap <Leader>. :tabn<CR>
 nmap <Leader>m :tabp<CR>
-nmap <Leader>\ :set cursorline!<CR>
 
 " VUNDLER and PLUGINS
 set rtp+=~/.vim/bundle/Vundle.vim
