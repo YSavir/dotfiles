@@ -54,6 +54,14 @@ function! NumberToggle()
   endif
 endfunc
 
+function! CursoeLineToggle()
+  if(&cursorline == 1)
+    set nocursorline
+  else
+    set cursorline
+  endif
+endfunc
+
 function! ToggleComment()
   " Set comment character based on filetype
   if &filetype ==? 'ruby'
@@ -80,6 +88,7 @@ function! ToggleComment()
 endfunc
 
 nnoremap <C-n> :call NumberToggle()<cr>
+nnoremap <C-c> :call CursoeLineToggle()<cr>
 nnoremap <C-l> :call ToggleComment()<cr>
 
 filetype off                  " required
