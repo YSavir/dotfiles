@@ -24,6 +24,8 @@ au InsertLeave * hi StatusLine term=reverse ctermfg=0 ctermbg=2 gui=bold,reverse
 " highlight current line
 :hi CursorLine   cterm=NONE ctermbg=darkred ctermfg=white guibg=darkred guifg=white
 
+let &t_SI="\033[4 q" " start insert mode
+let &t_EI="\033[2 q" " end insert mode
 
 set directory=$HOME/.vim/swapfiles
 set omnifunc=htmlcomplete#CompleteTags
@@ -88,7 +90,7 @@ function! ToggleComment()
 endfunc
 
 nnoremap <C-n> :call NumberToggle()<cr>
-nnoremap <C-w> :call CursorLineToggle()<cr>
+nnoremap <C-h> :call CursorLineToggle()<cr>
 nnoremap <C-l> :call ToggleComment()<cr>
 
 filetype off                  " required
