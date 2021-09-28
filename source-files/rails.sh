@@ -7,7 +7,7 @@ alias wds='./bin/webpack-dev-server'
 
 alias be="bundle exec"
 
-alias rr='be rake routes'
+alias rr='be rails routes'
 alias rt='be rake -T'
 alias jw='be rake jobs:work'
 alias tjw='RAILS_ENV=test jw'

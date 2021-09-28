@@ -108,6 +108,7 @@ call vundle#begin()
 Plugin 'gmarik/Vundle.vim'
 Plugin 'posva/vim-vue'
 Plugin 'yssl/QFEnter'
+Plugin 'cakebaker/scss-syntax.vim'
 Bundle 'scrooloose/nerdtree'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'ervandew/supertab'
@@ -155,6 +156,10 @@ set breakindent
 vmap <Leader>t= :Tabularize /=<CR>
 vmap <Leader>t, :Tabularize /,\zs/l0l1<CR>
 vmap <Leader>tf, :Tabularize /^[^,]*,\zs<CR>
+vmap <Leader>ti :Tabularize /from<CR>
+
+vmap <Leader>t[ :Tabularize /{/l0l1<CR>
+vmap <Leader>t] :Tabularize /}/l1l0<CR>
 
 vmap <Leader>t; :Tabularize /:\zs/l0l1<CR>
 vmap <Leader>tf; :Tabularize /^[^:]*:\zs/l0l1<CR>
