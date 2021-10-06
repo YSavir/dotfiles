@@ -158,7 +158,7 @@ vmap <Leader>t, :Tabularize /,\zs/l0l1<CR>
 vmap <Leader>tf, :Tabularize /^[^,]*,\zs<CR>
 vmap <Leader>ti :Tabularize /from<CR>
 
-vmap <Leader>t[ :Tabularize /{/l0l1<CR>
+vmap <Leader>t[ :Tabularize /{/l1l1<CR>
 vmap <Leader>t] :Tabularize /}/l1l0<CR>
 
 vmap <Leader>t; :Tabularize /:\zs/l0l1<CR>

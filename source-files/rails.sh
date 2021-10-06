@@ -11,6 +11,7 @@ alias rr='be rails routes'
 alias rt='be rake -T'
 alias jw='be rake jobs:work'
 alias tjw='RAILS_ENV=test jw'
+alias rfd="be rake db:reset_with_fake_data"
 
 rSetup(){
   if [ -z $1 ]; then
