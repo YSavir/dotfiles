@@ -66,7 +66,7 @@ endfunc
 
 function! ToggleComment()
   " Set comment character based on filetype
-  if &filetype ==? 'ruby'
+  if &filetype ==? 'ruby' || &filetype ==? 'sh'
     let commentChar = "#"
   elseif &filetype ==? 'vim'
     let commentChar = '"'
