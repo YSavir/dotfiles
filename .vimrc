@@ -150,6 +150,8 @@ let g:qfenter_keymap.topen = ['<C-t>']
 let g:grepper = {}
 let g:grepper.tools = ['ag']
 
+nmap gs <plug>(GrepperOperator)
+
 set breakindent
 
 " Tabular
