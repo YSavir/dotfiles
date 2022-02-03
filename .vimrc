@@ -90,7 +90,6 @@ function! ToggleComment()
 endfunc
 
 nnoremap <C-n> :call NumberToggle()<cr>
-nnoremap <C-h> :call CursorLineToggle()<cr>
 nnoremap <C-l> :call ToggleComment()<cr>
 
 filetype off                  " required
