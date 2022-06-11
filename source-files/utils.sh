@@ -6,6 +6,7 @@ alias setbash='source ~/.bash_profile'
 alias kitty='cat /Users/Yaniv/Pictures/ascii/kitty.txt; echo ""'
 alias chrome='open -a "Google Chrome"'
 alias firefox='open -a "Firefox"'
+alias subl='open -a "Sublime Text"'
 
 alias MKDIR='mkdir -p'
 
