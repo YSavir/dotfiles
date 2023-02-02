@@ -3,6 +3,8 @@
 set nocompatible              " be iMproved, required
 set noswapfile
 
+set autoread
+
 syntax on
 filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
@@ -74,6 +76,8 @@ function! ToggleComment()
     let commentChar = '\/\/'
   elseif &filetype ==? 'css' || &filetype ==? 'scss'
     let commentChar = '\/\/'
+  elseif &filetype ==? 'vue' || &filetype ==? 'vue'
+    let commentChar = '\/\/'
   else
     let commentChar = ''
   endif
@@ -108,8 +112,6 @@ Plugin 'gmarik/Vundle.vim'
 Plugin 'posva/vim-vue'
 Plugin 'yssl/QFEnter'
 Plugin 'cakebaker/scss-syntax.vim'
-Bundle 'scrooloose/nerdtree'
-Bundle 'scrooloose/nerdcommenter'
 Bundle 'ervandew/supertab'
 Bundle 'mattn/emmet-vim'
 Bundle 'ctrlpvim/ctrlp.vim'
@@ -120,7 +122,6 @@ Bundle 'plasticboy/vim-markdown'
 Bundle 'suan/vim-instant-markdown'
 Bundle 'jaxbot/browserlink.vim.git'
 Bundle 'tpope/vim-fugitive.git'
-Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'godlygeek/tabular'
 Bundle 'mhinz/vim-grepper'
 Bundle 'jparise/vim-graphql'
@@ -128,16 +129,12 @@ Bundle 'jparise/vim-graphql'
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-" NERD TREE
-" autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-let NERDTreeShowHidden=1
-
 "##### Autocomplete
 set wildmode=longest,list
 set wildmenu
 
 " CTRLP
-set wildignore+=*/node_modules/*,*/tmp/*,*.so,*.swp,*.zip
+set wildignore+=*/node_modules/*,*/doc/*,*/tmp/*,*.so,*.swp,*.zip
 let g:ctrlp_show_hidden = 1 "show hidden files
 
 " QFEnter
