@@ -134,8 +134,12 @@ set wildmode=longest,list
 set wildmenu
 
 " CTRLP
-set wildignore+=*/node_modules/*,*/doc/*,*/tmp/*,*.so,*.swp,*.zip
+set wildignore+=*/node_modules/*,*/doc/*,*/tmp/*,*.so,*.swp,*.zip,*/public/packs-test/*,*/.git/*
 let g:ctrlp_show_hidden = 1 "show hidden files
+
+if executable('ag')
+  let g:ctrlp_user_command = 'ag %s -U -l --nocolor --hidden -g ""'
+endif
 
 " QFEnter
 " open quickfix links in new tab

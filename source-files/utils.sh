@@ -31,6 +31,28 @@ breadth_find(){
   done
 }
 
+fileCount() {
+  tree $1 | wc -l
+}
+
+findObsoleteVueBridges() {
+  directivesPath='app/javascript/src/vue/ng-vue-bridge/vue-directives.js'
+  matches=$(ag -o "component\('\K((\w|-)*)" $directivesPath)
+
+  for match in $matches; do
+    dashedMatch=$(echo $match         \
+     | sed 's/\(.\)\([A-Z]\)/\1-\2/g' \
+     | tr '[:upper:]' '[:lower:]')
+
+
+    result=$(ag "ngv-$dashedMatch" )
+
+    if [[ -z $result ]]; then
+      echo $dashedMatch
+    fi
+  done
+}
+
 go(){
   cd ~/
   for dir in $@; do
