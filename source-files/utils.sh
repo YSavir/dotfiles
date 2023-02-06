@@ -32,7 +32,9 @@ breadth_find(){
 }
 
 fileCount() {
-  tree $1 | wc -l
+  totalCount=$(tree -a $1 --noreport | wc -l)
+  directoryCount=$(tree -da $1 --noreport | wc -l)
+  echo "$((totalCount-directoryCount))"
 }
 
 findObsoleteVueBridges() {
