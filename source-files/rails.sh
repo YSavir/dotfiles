@@ -1,4 +1,5 @@
 alias rc='./bin/rails c'
+alias bd='./bin/dev'
 alias rs='./bin/rails s'
 alias trs='RAILS_ENV=test bundle exec ./bin/rails s'
 alias tjw='RAILS_ENV=test bundle exec rake jobs:work'
