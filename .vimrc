@@ -104,30 +104,26 @@ filetype off                  " required
 nmap <Leader>. :tabn<CR>
 nmap <Leader>m :tabp<CR>
 
-" VUNDLER and PLUGINS
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+" Vim-Plug and Plugins
+call plug#begin()
 
-Plugin 'gmarik/Vundle.vim'
-Plugin 'posva/vim-vue'
-Plugin 'yssl/QFEnter'
-Plugin 'cakebaker/scss-syntax.vim'
-Bundle 'ervandew/supertab'
-Bundle 'mattn/emmet-vim'
-Bundle 'ctrlpvim/ctrlp.vim'
-Bundle 'tpope/vim-rails'
-Bundle 'tpope/vim-surround'
-Bundle 'pangloss/vim-javascript'
-Bundle 'plasticboy/vim-markdown'
-Bundle 'suan/vim-instant-markdown'
-Bundle 'jaxbot/browserlink.vim.git'
-Bundle 'tpope/vim-fugitive.git'
-Bundle 'godlygeek/tabular'
-Bundle 'mhinz/vim-grepper'
-Bundle 'jparise/vim-graphql'
+Plug 'posva/vim-vue'
+Plug 'yssl/QFEnter'
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'ervandew/supertab'
+Plug 'mattn/emmet-vim'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'tpope/vim-rails'
+Plug 'tpope/vim-surround'
+Plug 'pangloss/vim-javascript'
+Plug 'plasticboy/vim-markdown'
+Plug 'suan/vim-instant-markdown'
+Plug 'godlygeek/tabular'
+Plug 'mhinz/vim-grepper'
+Plug 'jparise/vim-graphql'
 
-call vundle#end()            " required
-filetype plugin indent on    " required
+call plug#end()            " required
+filetype plugin indent on  " required
 
 "##### Autocomplete
 set wildmode=longest,list
