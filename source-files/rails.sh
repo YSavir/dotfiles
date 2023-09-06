@@ -7,6 +7,8 @@ alias rg='rails g'
 alias wds='./bin/webpack-dev-server'
 alias fs="foreman start -f Procfile.dev"
 
+alias lwds="NODE_OPTIONS=--openssl-legacy-provider ./bin/webpack-dev-server"
+
 alias be="bundle exec"
 
 alias rr='be ./bin/rails routes'
@@ -14,6 +16,10 @@ alias rt='be rake -T'
 alias jw='be rake jobs:work'
 alias tjw='RAILS_ENV=test jw'
 alias rfd="be rake db:reset_with_fake_data"
+
+pgrm() {
+  pg_restore $1 -d mir_site_development -O
+}
 
 rSetup(){
   if [ -z $1 ]; then
