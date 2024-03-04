@@ -16,6 +16,9 @@ alias rt='be rake -T'
 alias jw='be rake jobs:work'
 alias tjw='RAILS_ENV=test jw'
 alias rfd="be rake db:reset_with_fake_data"
+alias pgres="pg_restore --verbose --clean --no-acl --no-owner -h localhost"
+
+alias rngrok="ngrok http 3000 --domain=lemming-quiet-pelican.ngrok-free.app"
 
 pgrm() {
   pg_restore $1 -d mir_site_development -O
