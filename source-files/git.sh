@@ -24,3 +24,10 @@ gShow(){
 gChangedFiles() {
   git diff $1 $2 --name-only
 }
+
+gUpdates() {
+  while read filename
+  do
+    git --no-pager log --color -1 --date=short --pretty=format:'%C(cyan)%ai%Creset' -- $filename ; echo  " $filename"j
+  done | sort -r
+}
