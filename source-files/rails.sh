@@ -101,3 +101,11 @@ removeUnusedAssets(){
     fi
   done
 }
+
+eslintFixStaged() {
+  yarn eslint --fix $(git diff --staged --name-only | grep -E "(.js$|.ts$|.tsx$)")
+}
+
+prettierWriteStaged() {
+  yarn prettier -w $(git diff --staged --name-only | grep -E "(.js$|.ts$|.tsx$)")
+}
