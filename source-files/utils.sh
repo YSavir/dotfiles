@@ -9,6 +9,7 @@ alias firefox='open -a "Firefox"'
 alias subl='open -a "Sublime Text"'
 
 alias MKDIR='mkdir -p'
+alias notesToSelf='vim ~/Documents/notes_to_self.txt'
 
 makeMe () { 
   if [ $1 ]; then

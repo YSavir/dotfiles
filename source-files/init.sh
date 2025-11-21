@@ -18,3 +18,9 @@ done
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
+if test "$(wc -w < ~/Documents/notes_to_self.txt)" -gt 0
+then
+  printf "\nYou left notes for yourself!\n\n"
+  cat ~/Documents/notes_to_self.txt
+fi
+
