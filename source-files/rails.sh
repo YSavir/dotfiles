@@ -4,10 +4,10 @@ alias rs='./bin/rails s'
 alias trs='RAILS_ENV=test bundle exec ./bin/rails s'
 alias tjw='RAILS_ENV=test bundle exec rake jobs:work'
 alias rg='rails g'
-alias wds='./bin/webpack-dev-server'
 alias fs="foreman start -f Procfile.dev"
 
-alias lwds="NODE_OPTIONS=--openssl-legacy-provider ./bin/webpack-dev-server"
+alias vd="vite dev"
+alias rvd="bundle exec vite dev"
 
 alias be="bundle exec"
 
@@ -62,10 +62,6 @@ mkview(){
     touch app/views/"$view_dir"/"$view".html.erb;
     echo "creating view $view_dir/$view"
   done
-}
-
-compileTestTemplates() {
- handlebars app/assets/javascripts/templates/ -m -f test/indexes/javascripts/templates.js -n "HandlebarsTemplates" -e hbs 
 }
 
 findUnusedassets(){
