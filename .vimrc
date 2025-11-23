@@ -14,6 +14,9 @@ au BufRead,BufNewFile *.html set wrap
 au BufRead,BufNewFile *.rb,*.js setlocal colorcolumn=80
 au BufReadPost *.ccss set syntax=scss
 
+" use regexp engine 2 so it doesnt lag on typescript
+set re=2
+
 " status line
 set laststatus=2
 set statusline=%f
@@ -38,6 +41,14 @@ set autoindent
 set tabstop=2
 set expandtab
 set backspace=2
+
+"#### Let python use tabs
+
+augroup python
+  autocmd!
+  " Add shiftwidth and/or softtabstop if you want to override those too.
+  autocmd FileType python setlocal noexpandtab tabstop=4
+augroup end
 
 "##### Search and Orientation #####
 
@@ -68,7 +79,7 @@ endfunc
 
 function! ToggleComment()
   " Set comment character based on filetype
-  if &filetype ==? 'ruby' || &filetype ==? 'sh'
+  if &filetype ==? 'ruby' || &filetype ==? 'sh' || &filetype ==? 'gd'
     let commentChar = "#"
   elseif &filetype ==? 'vim'
     let commentChar = '"'
@@ -121,9 +132,14 @@ Plug 'suan/vim-instant-markdown'
 Plug 'godlygeek/tabular'
 Plug 'mhinz/vim-grepper'
 Plug 'jparise/vim-graphql'
+Plug 'habamax/vim-godot'
+Plug 'leafgarland/typescript-vim'
+Plug 'AndrewRadev/linediff.vim'
 
 call plug#end()            " required
 filetype plugin indent on  " required
+
+let g:vue_pre_processors = 'detect_on_enter'
 
 "##### Autocomplete
 set wildmode=longest,list
