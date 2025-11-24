@@ -5,6 +5,14 @@ set noswapfile
 
 set autoread
 
+" prevent vim from automatically adding newlines to ends of files
+:set nofixeol
+:set nofixendofline
+
+" let automatic regex engine be detected
+" the default new engine is slow with react
+set re=0
+
 syntax on
 filetype plugin on
 autocmd BufNewFile,BufReadPost *.md set filetype=markdown
