@@ -10,6 +10,7 @@ alias subl='open -a "Sublime Text"'
 
 alias MKDIR='mkdir -p'
 alias notesToSelf='vim ~/Documents/notes_to_self.txt'
+alias editUtilityNotes='vim ~/Documents/utilityNotes.txt'
 
 makeMe () { 
   if [ $1 ]; then
