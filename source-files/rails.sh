@@ -103,7 +103,7 @@ removeUnusedAssets(){
 }
 
 eslintFixStaged() {
-  yarn eslint --fix $(git diff --staged --name-only | grep -E "(.js$|.ts$|.tsx$)")
+  yarn eslint --fix $(git diff --staged --name-only --diff-filter=d | grep -E "(.js$|.ts$|.tsx$)")
 }
 
 prettierWriteStaged() {

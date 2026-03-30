@@ -33,3 +33,20 @@ for file in $dotFiles; do
   ln -s $dir/$fileName ~/$fileName
 done
 
+# Symlink claude config files into ~/.claude/
+claudeDir=~/dotfiles/claude
+mkdir -p ~/.claude
+
+for file in "$claudeDir"/*; do
+  fileName=$(basename "$file")
+  target=~/.claude/$fileName
+
+  if [ -f "$target" ] && [ ! -L "$target" ]; then
+    echo -n "backing up and "
+    mv -f "$target" "$olddir/claude_$fileName"
+  fi
+
+  echo "creating symlink for .claude/$fileName"
+  ln -sf "$claudeDir/$fileName" "$target"
+done
+
