@@ -12,3 +12,5 @@
   deleted = magenta
   untracked = yellow
   changed = blue
+[init]
+	defaultBranch = main

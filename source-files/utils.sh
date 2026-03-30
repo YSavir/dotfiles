@@ -3,7 +3,6 @@
 alias ll='ls -la'
 alias getbash='vim ~/.bash_profile'
 alias setbash='source ~/.bash_profile'
-alias kitty='cat /Users/Yaniv/Pictures/ascii/kitty.txt; echo ""'
 alias chrome='open -a "Google Chrome"'
 alias firefox='open -a "Firefox"'
 alias subl='open -a "Sublime Text"'
@@ -16,9 +15,9 @@ makeMe () {
   if [ $1 ]; then
     mkdir $1;
     cd $1;
-   else
-     echo "No directory name provided.";
-   fi
+  else
+    echo "No directory name provided.";
+  fi
 }
 
 breadth_find(){
@@ -37,24 +36,6 @@ fileCount() {
   totalCount=$(tree -a $1 --noreport | wc -l)
   directoryCount=$(tree -da $1 --noreport | wc -l)
   echo "$((totalCount-directoryCount))"
-}
-
-findObsoleteVueBridges() {
-  directivesPath='app/javascript/src/vue/ng-vue-bridge/vue-directives.js'
-  matches=$(ag -o "component\('\K((\w|-)*)" $directivesPath)
-
-  for match in $matches; do
-    dashedMatch=$(echo $match         \
-     | sed 's/\(.\)\([A-Z]\)/\1-\2/g' \
-     | tr '[:upper:]' '[:lower:]')
-
-
-    result=$(ag "ngv-$dashedMatch" )
-
-    if [[ -z $result ]]; then
-      echo $dashedMatch
-    fi
-  done
 }
 
 go(){
@@ -78,11 +59,12 @@ go(){
   done
 }
 
-
-# Handlebars
-
-precHB(){
-  handlebars -e hbs -m $1 -f $2
+repeat() {
+  number=$1
+  shift
+  for n in $(seq $number); do
+    $@
+  done
 }
 
 # Tree

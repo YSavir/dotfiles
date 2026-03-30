@@ -4,10 +4,10 @@ alias rs='./bin/rails s'
 alias trs='RAILS_ENV=test bundle exec ./bin/rails s'
 alias tjw='RAILS_ENV=test bundle exec rake jobs:work'
 alias rg='rails g'
-alias wds='./bin/webpack-dev-server'
 alias fs="foreman start -f Procfile.dev"
 
-alias lwds="NODE_OPTIONS=--openssl-legacy-provider ./bin/webpack-dev-server"
+alias vd="vite dev"
+alias rvd="bundle exec vite dev"
 
 alias be="bundle exec"
 
@@ -16,6 +16,9 @@ alias rt='be rake -T'
 alias jw='be rake jobs:work'
 alias tjw='RAILS_ENV=test jw'
 alias rfd="be rake db:reset_with_fake_data"
+alias pgres="pg_restore --verbose --clean --no-acl --no-owner -h localhost"
+
+alias rngrok="ngrok http 3000 --domain=lemming-quiet-pelican.ngrok-free.app"
 
 pgrm() {
   pg_restore $1 -d mir_site_development -O
@@ -59,10 +62,6 @@ mkview(){
     touch app/views/"$view_dir"/"$view".html.erb;
     echo "creating view $view_dir/$view"
   done
-}
-
-compileTestTemplates() {
- handlebars app/assets/javascripts/templates/ -m -f test/indexes/javascripts/templates.js -n "HandlebarsTemplates" -e hbs 
 }
 
 findUnusedassets(){

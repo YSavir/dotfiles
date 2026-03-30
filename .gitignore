@@ -4,3 +4,5 @@ source-files/path.sh
 source-files/env.sh
 source-files/work.sh
 *.sw
+
+.irb_history
