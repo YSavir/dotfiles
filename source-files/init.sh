@@ -6,7 +6,8 @@ source_files='env '\
 'path '\
 'prompt '\
 'git-completion '\
-'work'
+'work '\
+'ynotes'
 
 for source_file in $source_files; do
   file=~/dotfiles/source-files/$source_file.sh
