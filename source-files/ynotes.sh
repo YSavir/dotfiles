@@ -126,12 +126,21 @@ _ynotes_edit() {
       local today
       today=$(date +%Y-%m-%d)
       echo "$name,$today,$is_todo,$deadline,$filepath" >> "$YNOTES_CSV"
-      echo "Note '$name' saved."
     else
       rm -f "$filepath"
       echo "Empty note discarded."
+      return
     fi
   fi
+
+  local saved_todo saved_deadline
+  saved_todo=$(grep "^${name}," "$YNOTES_CSV" | cut -d',' -f3)
+  saved_deadline=$(grep "^${name}," "$YNOTES_CSV" | cut -d',' -f4)
+
+  local msg="Saved '$name'"
+  [ "$saved_todo" = "yes" ] && msg="$msg | todo"
+  [ -n "$saved_deadline" ] && msg="$msg | deadline: $saved_deadline"
+  echo "$msg"
 }
 
 _ynotes_list() {
@@ -208,3 +217,34 @@ ynotes() {
     *)    echo "Unknown command: $cmd"; _ynotes_help ;;
   esac
 }
+
+_ynotes_complete() {
+  local cur prev subcmd
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  prev="${COMP_WORDS[COMP_CWORD-1]}"
+  subcmd="${COMP_WORDS[1]}"
+
+  if [ "$COMP_CWORD" -eq 1 ]; then
+    COMPREPLY=( $(compgen -W "edit list find help" -- "$cur") )
+    return
+  fi
+
+  case "$subcmd" in
+    edit|find)
+      if [[ "$cur" == --* ]]; then
+        COMPREPLY=( $(compgen -W "--todo --deadline" -- "$cur") )
+      else
+        local note_names=""
+        if [ -f "$YNOTES_CSV" ]; then
+          note_names=$(tail -n +2 "$YNOTES_CSV" | cut -d',' -f1)
+        fi
+        COMPREPLY=( $(compgen -W "$note_names" -- "$cur") )
+      fi
+      ;;
+    list)
+      COMPREPLY=( $(compgen -W "--urgent --overdue" -- "$cur") )
+      ;;
+  esac
+}
+
+complete -F _ynotes_complete ynotes
