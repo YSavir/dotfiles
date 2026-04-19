@@ -6,3 +6,4 @@
 *.zip
 public/packs-test/*
 .git/*
+*.uid
