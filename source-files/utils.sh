@@ -71,4 +71,4 @@ repeat() {
 
 ## Skip NPM files
 
-alias tree="tree -I 'node_modules'"
+alias tree="tree -I 'node_modules' -I '*.uid'"
