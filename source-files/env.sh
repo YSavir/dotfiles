@@ -10,7 +10,7 @@ alias serveThis='ruby -run -e httpd . -p 9090'
 
 ### RBENV
 
-export RBENV_ROOT="${HOME}/.rebenv"
+export RBENV_ROOT="${HOME}/.rbenv"
 
 if [ -d $RBENV_ROOT ]; then
   export PATH="${RBENV_ROOT}/bin:${PATH}"
