@@ -157,7 +157,7 @@ set wildignore+=*/node_modules/*,*/doc/*,*/tmp/*,*.so,*.swp,*.zip,*/public/packs
 let g:ctrlp_show_hidden = 1 "show hidden files
 
 if executable('ag')
-  let g:ctrlp_user_command = 'ag %s -U -l --nocolor --hidden -g ""'
+  let g:ctrlp_user_command = 'ag %s -U -l -f --nocolor --hidden -g ""'
 endif
 
 " QFEnter
