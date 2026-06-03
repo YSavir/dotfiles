@@ -47,6 +47,8 @@ Avoid `let`, `let!`, and `before` blocks in specs. Favor composing each test ful
 - Instantiate real objects rather than mocks/doubles when possible
 - Use helper methods (not `let`) for setup shared across multiple `it` blocks — invoking a helper still documents the functionality as part of the test context
 - **Exception:** When editing an existing file that already uses `let`/`let!`/`before`, stay consistent with that file's style rather than mixing approaches
+- Keep tests focused — each `it` block should only assert on the behavior it describes
+- `it`/`describe`/`context` strings state the expectation only, not the reasoning behind it. Strip "because…" clauses and explanatory parentheticals. `it 'returns 404 because only advisors may view this'` → `it 'returns 404'`. Contextual qualifiers that *narrow what's being asserted* (e.g. "when signed in as a client") are fine; justifications for why the behavior is the way it is are not.
 
 ## Pull Request Descriptions
 
