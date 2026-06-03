@@ -4,9 +4,40 @@
 
 Repository conventions take priority over these personal preferences. Unless noted otherwise, respect the existing paradigms, patterns, and styles of the codebase first — personal rules and styles should shine through in the space that remains.
 
-## Multi-Step Plan Execution
+## Planning & Execution
 
-When given a multi-step plan to implement, complete only the first step and then STOP and wait for approval before continuing. Treat "implement the following plan" as "implement Step 1 only, then pause." Only proceed to the next step after explicit approval. If all steps at once are wanted, the user will say so (e.g., "implement the full plan").
+### Plan structure (two-tier)
+
+Plans come in two tiers, and the tier dictates the level of detail.
+
+**High-level plan** — the map for a feature. Two sections:
+
+1. **Important Concepts** — highlights big ideas: new tables and their structure, relationships between entities, significant changes to existing systems or features. Prose is the default; markdown tables are fine for laying out columns, fields, or entity relationships. No code, no schema diagrams — enough picture to make the steps that follow comprehensible.
+2. **Steps** — a list of digestible steps. Each step gets a short prose description of what it accomplishes and how it fits the whole. No code samples, method signatures, SQL, or file:line citations.
+
+The reader evaluates the *shape* of the work without getting pulled into implementation.
+
+**Low-level plan** — written when we're about to execute one specific step. Scope is narrow enough that implementation specifics (exact files, method names, small code sketches, event/command names) don't drown out the design. Write these one at a time, not up front — earlier steps often reshape later ones.
+
+File layout under `.claude/plans/`: parent as `<feature-slug>.md`, children as `<feature-slug>-step-<n>-<slug>.md`. Parent links children; children link back.
+
+In chat, the same rule applies: high-level proposals stay in prose; only drop to code-level detail when the user signals we're working a specific step.
+
+### Multi-step execution cadence
+
+When given a multi-step plan to implement, complete only the first step and then STOP and wait for approval before continuing. Treat "implement the following plan" as "implement Step 1 only, then pause." Only proceed after explicit approval. If all steps at once are wanted, the user will say so (e.g., "implement the full plan").
+
+### TDD cycle within a step
+
+When a step involves Ruby code with specs, follow this cycle:
+
+1. **Write all tests relevant to the current step in one pass.** A step's scope is set by the plan — usually that means the happy path plus negative/edge cases that lock in the behavior (guards, nil-handling, alternate inputs). But the plan may deliberately scope an early step to the happy path only, with edge cases handled in a later step. Write to the scope the plan defines — don't expand it, don't shrink it.
+2. **Create just enough scaffolding for the tests to load and fail meaningfully.** Scaffolding means only what prevents load errors — creating missing files, defining referenced classes or modules. It does NOT mean adding attributes, methods, or any logic that is part of the feature itself. Tests should fail with assertion failures, not load errors.
+3. **Pause.** The user reviews the full test file, runs it, and commits if they want.
+4. **Implement only what's needed to make all tests in this step pass.** No more.
+5. **Pause again.** Repeat for the next step.
+
+The two pauses (after specs, after implementation) are where genuine review happens — don't skip them.
 
 ## Ruby Spec Style
 
@@ -17,17 +48,19 @@ Avoid `let`, `let!`, and `before` blocks in specs. Favor composing each test ful
 - Use helper methods (not `let`) for setup shared across multiple `it` blocks — invoking a helper still documents the functionality as part of the test context
 - **Exception:** When editing an existing file that already uses `let`/`let!`/`before`, stay consistent with that file's style rather than mixing approaches
 
-## Test-Driven Development Workflow
+## Pull Request Descriptions
 
-When executing a plan that involves Ruby code with specs, follow a strict TDD cycle:
+Structure PR descriptions in this order:
 
-1. **Write the spec first.** Before writing any feature code, write the test.
-2. **Create just enough scaffolding for the test to fail meaningfully.** Define the classes/files the spec references so it can load and run — but don't implement the logic. The test should fail with an assertion failure, not a load error.
-3. **Pause.** Let the user review, run the test, and commit if they want.
-4. **Implement only what's needed to make that one test pass.** No more.
-5. **Pause again.** Repeat for the next test.
-
-Do not move to the next test until the user signals to proceed.
+1. **Lead with plain English.** 1-2 sentences describing the problem and what the PR changes at a high level. Write this for someone skimming — no jargon, no implementation details.
+2. **Key changes.** A few bullet points describing the important changes, worded more formally.
+3. **Notable changes.** A primer to prepare the reviewer for reading the full diff — not a summary of all changes. For each core class/module that was significantly changed or introduced, add a section with:
+   - A **header** matching the class/module name (or equivalent), linked to the file on GitHub (predicted from the repo remote and branch).
+   - **1-2 paragraphs** describing what the element is and how it contributes, written in plain language. Avoid implementation specifics — the goal is context, not details.
+   - Optionally, a **GitHub-flavored markdown table** (pipe-delimited, not ASCII art) documenting key methods or inputs worth calling out. Columns: Method/Input, Output, Summary.
+   - **Order** sections so shared dependencies come first, then elements that build on them.
+   - **Exclude** tests, trivial changes, minor touch-ups, and modules that are easy to understand or deal with niche issues not central to the feature's purpose. Only include elements that are complex or central enough that a reviewer benefits from context before reading the code.
+   - **Output format:** The PR description must be raw, copyable markdown — not rendered. Output it as plain text so the user can paste it directly into GitHub. Do not insert hard line breaks within paragraphs — each paragraph should be a single long line so it reflows naturally when pasted.
 
 ## General Coding Style
 
