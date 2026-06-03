@@ -39,6 +39,12 @@ When a step involves Ruby code with specs, follow this cycle:
 
 The two pauses (after specs, after implementation) are where genuine review happens — don't skip them.
 
+## Lists That Need User Action
+
+When presenting a list the user needs to refer back to (concerns to triage, options to pick from, items to act on), use numbered items and always include the body — never just numbers. The user doesn't memorize which number maps to which concept; they read off the screen.
+
+If the list has been revised since last shown (items resolved, accepted, or reordered), **start the numbering over from 1** and tell the user explicitly that you've renumbered. Otherwise stale references silently rot. If you're not sure what number maps to what anymore, restart numbering too.
+
 ## Ruby Spec Style
 
 Avoid `let`, `let!`, and `before` blocks in specs. Favor composing each test fully inside its `it` block (or `scenario` for feature tests) with no mystery guests.
