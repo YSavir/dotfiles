@@ -69,6 +69,20 @@ Structure PR descriptions in this order:
    - **Order** sections so shared dependencies come first, then elements that build on them.
    - **Exclude** tests, trivial changes, minor touch-ups, and modules that are easy to understand or deal with niche issues not central to the feature's purpose. Only include elements that are complex or central enough that a reviewer benefits from context before reading the code.
    - **Output format:** The PR description must be raw, copyable markdown — not rendered. Output it as plain text so the user can paste it directly into GitHub. Do not insert hard line breaks within paragraphs — each paragraph should be a single long line so it reflows naturally when pasted.
+   - **Tense:** Frame the PR as a *proposed* change, not a merged one. Write "with these changes, we record X" / "this PR introduces Y" — not "we now record X" / "now Y happens." The "now" framing reads as if the change has already shipped, which preempts the reviewer's evaluation.
+
+## Delivering Long Content for Copy
+
+When the user needs to copy a sizable block of content (PR descriptions, commit messages, generated snippets, etc.) that's awkward to select from terminal output, deliver it via the macOS clipboard.
+
+**Flow:**
+
+1. Draft the content (in chat, or after the user has reviewed it).
+2. **Warn before clobbering the clipboard.** The user may have something on their clipboard about to be pasted. Ask "ready to copy this to your clipboard?" and wait for confirmation. Don't quietly overwrite their clipboard.
+3. On confirmation: use the `Write` tool to drop the content into a transient file under `/tmp/`, then a single Bash call `pbcopy < /tmp/<file> && rm /tmp/<file>`.
+4. Confirm in chat that the content is on the clipboard.
+
+The temp file is purely an intermediate — the user never sees or interacts with it. The reason for going through a file instead of piping content directly to `pbcopy` is that long markdown with backticks and special characters is fragile in `echo` or heredocs; `Write` handles it cleanly.
 
 ## General Coding Style
 
