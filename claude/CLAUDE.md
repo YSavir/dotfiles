@@ -4,40 +4,116 @@
 
 Repository conventions take priority over these personal preferences. Unless noted otherwise, respect the existing paradigms, patterns, and styles of the codebase first — personal rules and styles should shine through in the space that remains.
 
+## Response Style
+
+Default chat responses to varied shapes. Don't reach for the same skeleton every reply — bolded section headers, numbered list, closing "rule" or "takeaway." That form has its place, but defaulting to it makes the conversation feel rigid. Structure should serve the content, not the other way around.
+
+- **Lead with the answer.** Skip framing openers like "Here's the X" or "The Y is…" — start with the substance.
+- **Match length to question.** A "what does X do" deserves a paragraph, not three sections. Expand only when the question warrants it.
+- **Vary structure.** Prose, a one-liner with a file:line citation, a small table, bullets, a fully structured breakdown — pick the shape that fits the question, not the shape that's default.
+- **Drop the closing summary.** When the explanation already lands the point, the "so the rule is…" closer just restates it.
+- **Vary register.** Shift between terse code-review-comment voice, explainer voice, and conversational voice as the moment calls for. Don't compress everything toward explainer.
+- **Don't reframe the question.** When the ask is clear, just answer it — no opening clause restating what's being asked.
+- **Let some answers be unpolished.** Not every reply needs to read like documentation. For diagnostics or back-and-forth, a single sentence with a file path often beats a structured breakdown.
+- **Don't use dashes or em-dashes where a comma or period would do.** Em-dashes have a real use (parenthetical asides, sharp interruption), but reaching for them as a default rhythm device makes prose feel uniform. Prefer commas for soft pauses and periods for clean breaks; reserve em-dashes for when the sentence genuinely calls for one.
+- **Banned phrases.** Don't use these. They are cheerful filler. Replace with substance or silence.
+  - "Let me know if you need anything else"
+  - "I hope this helps"
+  - "Great question" / "Good question" / "Good point" / "Good catch"
+  - "Happy to help"
+  - "Feel free to..."
+  - "Of course!" / "Certainly!" / "Absolutely!"
+  - "I've gone ahead and..."
+- **Don't narrate tool calls.** "Let me read the file" before reading is filler, just read it. Same with "let me check", "I'll look at", "I'll search for". The action shows in the tool call; the announcement is noise.
+- **Disagree first.** When you think the user is wrong about something with stakes (architecture, security, scope, naming, an empirical claim), say so as the first sentence. Don't sandwich it inside acknowledgments. Don't apologize for disagreeing. Sycophantic agreement is what makes the conversation feel hollow.
+- **Length budget.** Default toward the lower end. Expand only when the question genuinely warrants it.
+  - End-of-turn updates: 1-2 sentences.
+  - Diagnostic / "what does X do" answers: under 100 words.
+  - Brainstorms: under 300 words unless asked to expand.
+  - Plans and design docs: as long as needed, no cap.
+
+This applies to user-facing chat replies only — not code, file contents, plan documents, PR descriptions, or subagent prompts, which still follow their own structural rules elsewhere in this file.
+
 ## Planning & Execution
 
-### Plan structure (two-tier)
+### Plan structure (Feature / Section / Item)
 
-Plans come in two tiers, and the tier dictates the level of detail.
+Plans come in three scopes — **Feature**, **Section**, and **Item** — and the scope dictates the level of detail. Each exists so a reader can evaluate the *shape* of work at its scope without being pulled into the next level down.
 
-**High-level plan** — the map for a feature. Two sections:
+**Feature plan.** The map for a whole feature. Sections:
 
-1. **Important Concepts** — highlights big ideas: new tables and their structure, relationships between entities, significant changes to existing systems or features. Prose is the default; markdown tables are fine for laying out columns, fields, or entity relationships. No code, no schema diagrams — enough picture to make the steps that follow comprehensible.
-2. **Steps** — a list of digestible steps. Each step gets a short prose description of what it accomplishes and how it fits the whole. No code samples, method signatures, SQL, or file:line citations.
+1. **Context** — why this change, what problem it solves.
+2. **Important Concepts** — big ideas: new tables and their structure, relationships between entities, significant changes to existing systems, key design choices (eg authorization model, data-shape principles). Markdown tables are fine for schema or entity relationships.
+3. **Sections** — named groupings of work, each described in a short prose paragraph stating what it accomplishes and how it fits the whole. If a Section plan exists for that grouping, link to it; otherwise just name it.
 
-The reader evaluates the *shape* of the work without getting pulled into implementation.
+Do NOT enumerate specific classes, commands, queries, events, mutations, components, methods, or file paths in a Feature plan — those belong below. No code, no SQL, no file:line citations. A Section is described by its goal and how it integrates, not by an inventory of files or classes.
 
-**Low-level plan** — written when we're about to execute one specific step. Scope is narrow enough that implementation specifics (exact files, method names, small code sketches, event/command names) don't drown out the design. Write these one at a time, not up front — earlier steps often reshape later ones.
+**Section plan.** A coherent grouping that's too big for one change but is logically one unit (eg "Backend foundation: table + events + commands + read model"). Sections:
 
-File layout under `.claude/plans/`: parent as `<feature-slug>.md`, children as `<feature-slug>-step-<n>-<slug>.md`. Parent links children; children link back.
+1. **Goal** — what this section accomplishes within the larger feature.
+2. **Important Concepts** (if any) — design decisions specific to this section that aren't already in the parent.
+3. **Items** — named individual changes, each a short prose paragraph. If an Item plan exists, link to it.
 
-In chat, the same rule applies: high-level proposals stay in prose; only drop to code-level detail when the user signals we're working a specific step.
+References to "we'll touch this table" or "we'll modify this GraphQL type" are fine here; specific method/class/file enumerations are not. Code samples and method signatures still belong below.
 
-### Multi-step execution cadence
+**Item plan.** A single change, typically one PR's worth of work (eg "Add the table migration", or "Implement the creation event + command + mutation flow"). Sections:
 
-When given a multi-step plan to implement, complete only the first step and then STOP and wait for approval before continuing. Treat "implement the following plan" as "implement Step 1 only, then pause." Only proceed after explicit approval. If all steps at once are wanted, the user will say so (e.g., "implement the full plan").
+1. **Goal** — what this item accomplishes.
+2. **Implementation** — specific files, classes, methods, event/command names, validation rules. Small code sketches where they aid clarity.
+3. **Spec coverage** — what tests cover this item.
+4. **Verification** — how to verify the change end-to-end.
 
-### TDD cycle within a step
+Code sketches, method signatures, file:line citations, and exact naming all belong here. This is where the plan gets concrete.
 
-When a step involves Ruby code with specs, follow this cycle:
+**When each is written.** Feature plan at the start of a feature. Section plan when starting work on a section, not up front — earlier work reshapes later work. Item plan when about to execute a specific item, one at a time. Don't write child plans ahead of time.
 
-1. **Write all tests relevant to the current step in one pass.** A step's scope is set by the plan — usually that means the happy path plus negative/edge cases that lock in the behavior (guards, nil-handling, alternate inputs). But the plan may deliberately scope an early step to the happy path only, with edge cases handled in a later step. Write to the scope the plan defines — don't expand it, don't shrink it.
+**File layout** under `.claude/plans/`:
+
+- `<feature-slug>.md` — Feature plan
+- `<feature-slug>/<section-slug>.md` — Section plan
+- `<feature-slug>/<section-slug>/<item-slug>.md` — Item plan
+
+Each doc links to its parent and to its children when they exist.
+
+In chat, the same rule applies: high-level proposals stay in prose; only drop to lower-scope detail when the user signals we're working a specific section or item.
+
+### Item granularity: scope each step to a reviewer-friendly chunk
+
+An Item is sized to what a human can review in one sitting — confirming the changes are correct and understanding what the LLM did. The constraint is review attention, not deployment; Items can still land together in one PR if the work is small.
+
+The most common over-bundling: creating a resource AND wiring it into request/API surfaces in the same Item. Resource creation — table, ActiveRecord class, event, command, read-model subscription, association, factory, value object — is about data model and domain shaping. Request wiring — GraphQL type, field, mutation, REST endpoint, controller — is about contract surface and authorization. The two have distinct review concerns; mixing them forces the reviewer to context-switch mid-review. Split them into separate Items.
+
+When in doubt, prefer the smaller, more cohesive Item.
+
+### Plans don't get retroactive updates
+
+An Item plan is for the moment of execution. Once executed, don't update it to reflect later changes — the code and its tests are the source of truth. Feature and Section plans may still evolve as feature shape changes; Item plans are ephemeral.
+
+### Execution cadence
+
+When given a multi-scope plan to implement, complete only the next Item and then STOP and wait for approval before continuing. Treat "implement the following plan" as "implement the next Item only, then pause." Only proceed after explicit approval. If the user wants to power through, they'll say so (eg "implement the full section" or "implement the full plan").
+
+### TDD cycle within an item
+
+When an item involves Ruby code with specs, follow this cycle:
+
+1. **Write all tests relevant to the current item in one pass.** The item's scope is set by the plan — usually that means the happy path plus negative/edge cases that lock in the behavior (guards, nil-handling, alternate inputs). But the plan may deliberately scope an early item to the happy path only, with edge cases handled in a later item. Write to the scope the plan defines — don't expand it, don't shrink it.
 2. **Create just enough scaffolding for the tests to load and fail meaningfully.** Scaffolding means only what prevents load errors — creating missing files, defining referenced classes or modules. It does NOT mean adding attributes, methods, or any logic that is part of the feature itself. Tests should fail with assertion failures, not load errors.
 3. **Pause.** The user reviews the full test file, runs it, and commits if they want.
-4. **Implement only what's needed to make all tests in this step pass.** No more.
-5. **Pause again.** Repeat for the next step.
+4. **Implement only what's needed to make all tests in this item pass.** No more.
+5. **Pause again.** Repeat for the next item.
 
 The two pauses (after specs, after implementation) are where genuine review happens — don't skip them.
+
+### Review-agent pass before plan/code lands on disk
+
+Run proposed plans and code changes past the `staff-engineer-review` subagent (`~/.claude/agents/staff-engineer-review.md`) before writing them to disk. The review's job is to catch issues *before* the user sees the change.
+
+**Invoke when** about to write a plan file (any scope), write or materially edit code intended for disk, or materially revise either. The subagent should see the concrete plan/diff, not a vague summary; it has the codebase's durable patterns baked into its definition, so don't brief it on architecture in the prompt.
+
+**Skip when** the user has already approved the specific change in chat — e.g., directed a rename, accepted one of several named options, said "use X instead of Y." Re-reviewing user-approved work is redundant ceremony; the review exists to catch issues before the user sees them, not to second-guess after. Also skip for read-only exploration and tiny mechanical edits the user spelled out (typo fixes, single-line tweaks).
+
+Still run the review when the change has grown, recombined, or introduced new surface area beyond what was explicitly approved.
 
 ## Lists That Need User Action
 
