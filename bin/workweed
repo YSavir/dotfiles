@@ -30,24 +30,39 @@ EOF
 }
 
 read_repo() {
-    if [[ ! -f "$CONFIG_FILE" ]]; then
-        echo "No config at $CONFIG_FILE. Run: workweed set-repo <path>" >&2
-        exit 1
-    fi
-    local repo
-    if ! repo=$(git config --file "$CONFIG_FILE" workweed.repo 2>/dev/null); then
-        echo "workweed.repo is not set in $CONFIG_FILE. Run: workweed set-repo <path>" >&2
-        exit 1
+    local repo=""
+    if [[ -f "$CONFIG_FILE" ]]; then
+        repo=$(git config --file "$CONFIG_FILE" workweed.repo 2>/dev/null) || repo=""
     fi
     if [[ -z "$repo" ]]; then
-        echo "workweed.repo is empty in $CONFIG_FILE. Run: workweed set-repo <path>" >&2
+        echo "No repo configured. Run: workweed set-repo <path>" >&2
         exit 1
     fi
     if [[ ! -d "$repo" ]]; then
-        echo "workweed.repo points to a missing directory: $repo" >&2
+        echo "Configured repo path is missing: $repo" >&2
         exit 1
     fi
     printf '%s\n' "$repo"
+}
+
+validate_name() {
+    local name="$1"
+    if [[ "$name" == */* || "$name" == "." || "$name" == ".." || -z "$name" ]]; then
+        echo "Invalid worktree name: $name" >&2
+        exit 1
+    fi
+}
+
+worktree_path_for() {
+    local repo="$1" name="$2"
+    printf '%s\n' "$(dirname "$repo")/worktrees/$name"
+}
+
+# Returns 0 if <path> is registered as a worktree of <repo>, 1 otherwise.
+is_registered_worktree() {
+    local repo="$1" path="$2"
+    git -C "$repo" worktree list --porcelain \
+        | awk -v t="$path" '$1 == "worktree" && substr($0, 10) == t { found=1 } END { exit !found }'
 }
 
 cmd_set_repo() {
@@ -108,9 +123,41 @@ current_worktree_head() {
     local repo="$1"
     local toplevel
     toplevel=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
-    if git -C "$repo" worktree list --porcelain \
-        | awk -v t="$toplevel" '$1 == "worktree" && substr($0, 10) == t { found=1 } END { exit !found }'; then
+    if is_registered_worktree "$repo" "$toplevel"; then
         git rev-parse HEAD 2>/dev/null
+    fi
+}
+
+# Run the configured hook for <event> from inside <worktree_path>.
+# Hook receives env vars:
+#   WORKWEED_REPO_PATH, WORKWEED_WORKTREE_PATH, WORKWEED_BRANCH, WORKWEED_NAME
+# Returns 0 if no hook is configured or the hook succeeds. Prints a diagnostic
+# to stderr and returns non-zero if the hook is not executable or exits
+# non-zero. Callers decide whether failure is fatal.
+run_hook() {
+    local event="$1" repo="$2" worktree_path="$3" branch="$4" name="$5"
+    local config_key
+    case "$event" in
+        post-create) config_key="workweed.post-create-hook" ;;
+        pre-remove)  config_key="workweed.pre-remove-hook" ;;
+    esac
+    local hook
+    hook=$(git config --file "$CONFIG_FILE" "$config_key" 2>/dev/null) || return 0
+    [[ -z "$hook" ]] && return 0
+    if [[ ! -x "$hook" ]]; then
+        echo "$event hook is not executable: $hook" >&2
+        return 1
+    fi
+    if ! (
+        cd "$worktree_path"
+        WORKWEED_REPO_PATH="$repo" \
+        WORKWEED_WORKTREE_PATH="$worktree_path" \
+        WORKWEED_BRANCH="$branch" \
+        WORKWEED_NAME="$name" \
+        "$hook" >&2
+    ); then
+        echo "$event hook exited with non-zero status" >&2
+        return 1
     fi
 }
 
@@ -122,16 +169,15 @@ cmd_add() {
     local branch="$1"
     local name="$2"
 
-    if [[ "$name" == */* || "$name" == "." || "$name" == ".." || -z "$name" ]]; then
-        echo "Invalid worktree name: $name" >&2
-        exit 1
-    fi
+    validate_name "$name"
 
     local repo
     repo=$(read_repo)
 
-    local worktree_root="$(dirname "$repo")/worktrees"
-    local worktree_path="$worktree_root/$name"
+    local worktree_path
+    worktree_path=$(worktree_path_for "$repo" "$name")
+    local worktree_root
+    worktree_root=$(dirname "$worktree_path")
 
     if [[ -e "$worktree_path" ]]; then
         echo "Path already exists: $worktree_path" >&2
@@ -157,21 +203,7 @@ cmd_add() {
         exit 1
     fi
 
-    local hook=""
-    hook=$(git config --file "$CONFIG_FILE" workweed.post-create-hook 2>/dev/null) || true
-    if [[ -n "$hook" ]]; then
-        if [[ ! -x "$hook" ]]; then
-            echo "Warning: post-create hook is not executable: $hook" >&2
-        else
-            cd "$worktree_path"
-            WORKWEED_REPO_PATH="$repo" \
-            WORKWEED_WORKTREE_PATH="$worktree_path" \
-            WORKWEED_BRANCH="$branch" \
-            WORKWEED_NAME="$name" \
-            "$hook" >&2 \
-                || echo "Warning: post-create hook exited with non-zero status" >&2
-        fi
-    fi
+    run_hook post-create "$repo" "$worktree_path" "$branch" "$name" || true
 
     printf '%s\n' "$worktree_path"
 }
@@ -193,45 +225,27 @@ cmd_remove() {
     fi
     local name="$1"
 
-    if [[ "$name" == */* || "$name" == "." || "$name" == ".." || -z "$name" ]]; then
-        echo "Invalid worktree name: $name" >&2
-        exit 1
-    fi
+    validate_name "$name"
 
     local repo
     repo=$(read_repo)
 
-    local worktree_path="$(dirname "$repo")/worktrees/$name"
+    local worktree_path
+    worktree_path=$(worktree_path_for "$repo" "$name")
 
     # Confirm the path is registered as a worktree of $repo before removing,
     # so a stray name can't be turned into an `rm -rf` of an unrelated dir.
-    if ! git -C "$repo" worktree list --porcelain \
-        | awk -v t="$worktree_path" '$1 == "worktree" && substr($0, 10) == t { found=1 } END { exit !found }'; then
+    if ! is_registered_worktree "$repo" "$worktree_path"; then
         echo "Not a worktree of $repo: $worktree_path" >&2
         exit 1
     fi
 
     if (( !force )); then
-        local hook=""
-        hook=$(git config --file "$CONFIG_FILE" workweed.pre-remove-hook 2>/dev/null) || true
-        if [[ -n "$hook" ]]; then
-            if [[ ! -x "$hook" ]]; then
-                echo "pre-remove hook is not executable: $hook" >&2
-                exit 1
-            fi
-            local branch=""
-            branch=$(git -C "$worktree_path" rev-parse --abbrev-ref HEAD 2>/dev/null) || branch=""
-            if ! (
-                cd "$worktree_path"
-                WORKWEED_REPO_PATH="$repo" \
-                WORKWEED_WORKTREE_PATH="$worktree_path" \
-                WORKWEED_BRANCH="$branch" \
-                WORKWEED_NAME="$name" \
-                "$hook" >&2
-            ); then
-                echo "pre-remove hook failed; aborting. Use -f to skip the hook and force removal." >&2
-                exit 1
-            fi
+        local branch=""
+        branch=$(git -C "$worktree_path" rev-parse --abbrev-ref HEAD 2>/dev/null) || branch=""
+        if ! run_hook pre-remove "$repo" "$worktree_path" "$branch" "$name"; then
+            echo "Aborting removal. Use -f to skip the hook and force removal." >&2
+            exit 1
         fi
     fi
 
@@ -247,6 +261,19 @@ cmd_remove() {
 list_worktrees() {
     local repo="$1"
     git -C "$repo" worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }'
+}
+
+# Print the names of worktrees managed by workweed (basenames under the
+# expected worktree root), one per line. Used by shell completion.
+cmd_names() {
+    local repo
+    repo=$(read_repo)
+    local root="$(dirname "$repo")/worktrees"
+    list_worktrees "$repo" | while IFS= read -r path; do
+        if [[ "$path" == "$root/"* ]]; then
+            basename "$path"
+        fi
+    done
 }
 
 tui_select() {
@@ -376,6 +403,10 @@ main() {
         remove|rm)
             shift
             cmd_remove "$@"
+            ;;
+        names)
+            shift
+            cmd_names
             ;;
         -h|--help|help)
             usage
