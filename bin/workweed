@@ -6,9 +6,17 @@ CONFIG_FILE="$HOME/.workweedconfig"
 usage() {
     cat >&2 <<'EOF'
 Usage:
-  workweed                  Browse worktrees of the configured repo.
-                            j/k navigate, Enter or Ctrl-T select, q or Esc quit.
-  workweed set-repo <path>  Configure the repo to monitor.
+  workweed                          Browse worktrees of the configured repo.
+                                    j/k or arrows navigate, Enter selects, q/Esc quits.
+  workweed set-repo <path>          Configure the repo to monitor.
+  workweed add <branch> <name>      Create a worktree at <repo>/../worktrees/<name>
+                                    checking out <branch>. If <branch> doesn't exist,
+                                    creates it from the current HEAD. Runs the
+                                    post-create hook if configured.
+  workweed set-hook <path>          Configure a post-create hook script. The script
+                                    runs inside the new worktree with these env vars:
+                                      WORKWEED_REPO_PATH, WORKWEED_WORKTREE_PATH,
+                                      WORKWEED_BRANCH, WORKWEED_NAME.
 EOF
 }
 
@@ -50,6 +58,102 @@ cmd_set_repo() {
     fi
     git config --file "$CONFIG_FILE" workweed.repo "$resolved"
     echo "Configured repo: $resolved" >&2
+}
+
+cmd_set_hook() {
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: workweed set-hook <path>" >&2
+        exit 1
+    fi
+    local input="$1"
+    if [[ ! -f "$input" ]]; then
+        echo "Not a file: $input" >&2
+        exit 1
+    fi
+    if [[ ! -x "$input" ]]; then
+        echo "Not executable: $input" >&2
+        exit 1
+    fi
+    local resolved
+    resolved="$(cd "$(dirname "$input")" && pwd)/$(basename "$input")"
+    git config --file "$CONFIG_FILE" workweed.post-create-hook "$resolved"
+    echo "Configured post-create hook: $resolved" >&2
+}
+
+# If the caller's cwd is inside any worktree of $repo, echo the SHA of that
+# worktree's HEAD. Echo nothing otherwise. Using the SHA (not a branch name)
+# means the new branch is anchored to the user's exact commit even when their
+# HEAD is detached or on a branch that doesn't exist in the main repo's view.
+current_worktree_head() {
+    local repo="$1"
+    local toplevel
+    toplevel=$(git rev-parse --show-toplevel 2>/dev/null) || return 0
+    if git -C "$repo" worktree list --porcelain \
+        | awk -v t="$toplevel" '$1 == "worktree" && substr($0, 10) == t { found=1 } END { exit !found }'; then
+        git rev-parse HEAD 2>/dev/null
+    fi
+}
+
+cmd_add() {
+    if [[ $# -lt 2 ]]; then
+        echo "Usage: workweed add <branch> <name>" >&2
+        exit 1
+    fi
+    local branch="$1"
+    local name="$2"
+
+    if [[ "$name" == */* || "$name" == "." || "$name" == ".." || -z "$name" ]]; then
+        echo "Invalid worktree name: $name" >&2
+        exit 1
+    fi
+
+    local repo
+    repo=$(read_repo)
+
+    local worktree_root="$(dirname "$repo")/worktrees"
+    local worktree_path="$worktree_root/$name"
+
+    if [[ -e "$worktree_path" ]]; then
+        echo "Path already exists: $worktree_path" >&2
+        exit 1
+    fi
+
+    local -a worktree_args=()
+    if git -C "$repo" show-ref --verify --quiet "refs/heads/$branch" \
+        || git -C "$repo" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+        worktree_args=("$worktree_path" "$branch")
+    else
+        worktree_args=("$worktree_path" "-b" "$branch")
+        local base
+        base=$(current_worktree_head "$repo")
+        if [[ -n "$base" ]]; then
+            worktree_args+=("$base")
+        fi
+    fi
+
+    mkdir -p "$worktree_root"
+
+    if ! git -C "$repo" worktree add "${worktree_args[@]}" >&2; then
+        exit 1
+    fi
+
+    local hook=""
+    hook=$(git config --file "$CONFIG_FILE" workweed.post-create-hook 2>/dev/null) || true
+    if [[ -n "$hook" ]]; then
+        if [[ ! -x "$hook" ]]; then
+            echo "Warning: post-create hook is not executable: $hook" >&2
+        else
+            cd "$worktree_path"
+            WORKWEED_REPO_PATH="$repo" \
+            WORKWEED_WORKTREE_PATH="$worktree_path" \
+            WORKWEED_BRANCH="$branch" \
+            WORKWEED_NAME="$name" \
+            "$hook" >&2 \
+                || echo "Warning: post-create hook exited with non-zero status" >&2
+        fi
+    fi
+
+    printf '%s\n' "$worktree_path"
 }
 
 list_worktrees() {
@@ -172,6 +276,14 @@ main() {
         set-repo)
             shift
             cmd_set_repo "$@"
+            ;;
+        set-hook)
+            shift
+            cmd_set_hook "$@"
+            ;;
+        add)
+            shift
+            cmd_add "$@"
             ;;
         -h|--help|help)
             usage
