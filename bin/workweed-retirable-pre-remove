@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# Adapter from workweed's pre-remove hook contract to retirable's
+# bin/teardown-worktree, which takes no args and runs from the worktree.
+set -euo pipefail
+exec "$WORKWEED_WORKTREE_PATH/bin/teardown-worktree"

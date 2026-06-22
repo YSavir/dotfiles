@@ -13,8 +13,17 @@ Usage:
                                     checking out <branch>. If <branch> doesn't exist,
                                     creates it from the current HEAD. Runs the
                                     post-create hook if configured.
-  workweed set-hook <path>          Configure a post-create hook script. The script
-                                    runs inside the new worktree with these env vars:
+  workweed remove [-f] <name>       Remove the worktree at <repo>/../worktrees/<name>.
+                                    Refuses if the worktree is dirty or the pre-remove
+                                    hook fails; pass -f/--force to remove anyway and
+                                    skip the hook. Leaves the branch in place.
+  workweed set-hook <event> <path>  Configure a hook script for an event. Events:
+                                      post-create  runs after `add`, inside the new
+                                                   worktree. Non-zero exit is a warning.
+                                      pre-remove   runs before `remove`, inside the
+                                                   worktree being removed. Non-zero exit
+                                                   aborts the removal.
+                                    Hooks receive these env vars:
                                       WORKWEED_REPO_PATH, WORKWEED_WORKTREE_PATH,
                                       WORKWEED_BRANCH, WORKWEED_NAME.
 EOF
@@ -61,11 +70,22 @@ cmd_set_repo() {
 }
 
 cmd_set_hook() {
-    if [[ $# -lt 1 ]]; then
-        echo "Usage: workweed set-hook <path>" >&2
+    if [[ $# -lt 2 ]]; then
+        echo "Usage: workweed set-hook <event> <path>" >&2
+        echo "  Events: post-create, pre-remove" >&2
         exit 1
     fi
-    local input="$1"
+    local event="$1"
+    local input="$2"
+    local config_key
+    case "$event" in
+        post-create) config_key="workweed.post-create-hook" ;;
+        pre-remove)  config_key="workweed.pre-remove-hook" ;;
+        *)
+            echo "Unknown event: $event (must be post-create or pre-remove)" >&2
+            exit 1
+            ;;
+    esac
     if [[ ! -f "$input" ]]; then
         echo "Not a file: $input" >&2
         exit 1
@@ -76,8 +96,8 @@ cmd_set_hook() {
     fi
     local resolved
     resolved="$(cd "$(dirname "$input")" && pwd)/$(basename "$input")"
-    git config --file "$CONFIG_FILE" workweed.post-create-hook "$resolved"
-    echo "Configured post-create hook: $resolved" >&2
+    git config --file "$CONFIG_FILE" "$config_key" "$resolved"
+    echo "Configured $event hook: $resolved" >&2
 }
 
 # If the caller's cwd is inside any worktree of $repo, echo the SHA of that
@@ -154,6 +174,74 @@ cmd_add() {
     fi
 
     printf '%s\n' "$worktree_path"
+}
+
+cmd_remove() {
+    local force=0
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            -f|--force) force=1; shift ;;
+            --) shift; break ;;
+            -*) echo "Unknown flag: $1" >&2; exit 1 ;;
+            *) break ;;
+        esac
+    done
+
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: workweed remove [-f] <name>" >&2
+        exit 1
+    fi
+    local name="$1"
+
+    if [[ "$name" == */* || "$name" == "." || "$name" == ".." || -z "$name" ]]; then
+        echo "Invalid worktree name: $name" >&2
+        exit 1
+    fi
+
+    local repo
+    repo=$(read_repo)
+
+    local worktree_path="$(dirname "$repo")/worktrees/$name"
+
+    # Confirm the path is registered as a worktree of $repo before removing,
+    # so a stray name can't be turned into an `rm -rf` of an unrelated dir.
+    if ! git -C "$repo" worktree list --porcelain \
+        | awk -v t="$worktree_path" '$1 == "worktree" && substr($0, 10) == t { found=1 } END { exit !found }'; then
+        echo "Not a worktree of $repo: $worktree_path" >&2
+        exit 1
+    fi
+
+    if (( !force )); then
+        local hook=""
+        hook=$(git config --file "$CONFIG_FILE" workweed.pre-remove-hook 2>/dev/null) || true
+        if [[ -n "$hook" ]]; then
+            if [[ ! -x "$hook" ]]; then
+                echo "pre-remove hook is not executable: $hook" >&2
+                exit 1
+            fi
+            local branch=""
+            branch=$(git -C "$worktree_path" rev-parse --abbrev-ref HEAD 2>/dev/null) || branch=""
+            if ! (
+                cd "$worktree_path"
+                WORKWEED_REPO_PATH="$repo" \
+                WORKWEED_WORKTREE_PATH="$worktree_path" \
+                WORKWEED_BRANCH="$branch" \
+                WORKWEED_NAME="$name" \
+                "$hook" >&2
+            ); then
+                echo "pre-remove hook failed; aborting. Use -f to skip the hook and force removal." >&2
+                exit 1
+            fi
+        fi
+    fi
+
+    local -a remove_args=()
+    if (( force )); then
+        remove_args+=(--force)
+    fi
+    remove_args+=("$worktree_path")
+
+    git -C "$repo" worktree remove "${remove_args[@]}" >&2
 }
 
 list_worktrees() {
@@ -284,6 +372,10 @@ main() {
         add)
             shift
             cmd_add "$@"
+            ;;
+        remove|rm)
+            shift
+            cmd_remove "$@"
             ;;
         -h|--help|help)
             usage
