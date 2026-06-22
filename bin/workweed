@@ -1,0 +1,187 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+CONFIG_FILE="$HOME/.workweedconfig"
+
+usage() {
+    cat >&2 <<'EOF'
+Usage:
+  workweed                  Browse worktrees of the configured repo.
+                            j/k navigate, Enter or Ctrl-T select, q or Esc quit.
+  workweed set-repo <path>  Configure the repo to monitor.
+EOF
+}
+
+read_repo() {
+    if [[ ! -f "$CONFIG_FILE" ]]; then
+        echo "No config at $CONFIG_FILE. Run: workweed set-repo <path>" >&2
+        exit 1
+    fi
+    local repo
+    if ! repo=$(git config --file "$CONFIG_FILE" workweed.repo 2>/dev/null); then
+        echo "workweed.repo is not set in $CONFIG_FILE. Run: workweed set-repo <path>" >&2
+        exit 1
+    fi
+    if [[ -z "$repo" ]]; then
+        echo "workweed.repo is empty in $CONFIG_FILE. Run: workweed set-repo <path>" >&2
+        exit 1
+    fi
+    if [[ ! -d "$repo" ]]; then
+        echo "workweed.repo points to a missing directory: $repo" >&2
+        exit 1
+    fi
+    printf '%s\n' "$repo"
+}
+
+cmd_set_repo() {
+    if [[ $# -lt 1 ]]; then
+        echo "Usage: workweed set-repo <path>" >&2
+        exit 1
+    fi
+    local input="$1"
+    local resolved
+    if ! resolved=$(cd "$input" 2>/dev/null && pwd); then
+        echo "Not a directory: $input" >&2
+        exit 1
+    fi
+    if ! git -C "$resolved" rev-parse --git-dir >/dev/null 2>&1; then
+        echo "Not a git repository: $resolved" >&2
+        exit 1
+    fi
+    git config --file "$CONFIG_FILE" workweed.repo "$resolved"
+    echo "Configured repo: $resolved" >&2
+}
+
+list_worktrees() {
+    local repo="$1"
+    git -C "$repo" worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }'
+}
+
+tui_select() {
+    local repo="$1"
+    local -a paths=()
+    while IFS= read -r line; do
+        paths+=("$line")
+    done < <(list_worktrees "$repo")
+
+    if [[ ${#paths[@]} -eq 0 ]]; then
+        echo "No worktrees found in $repo" >&2
+        exit 1
+    fi
+
+    # fd 3/4 talk to the terminal so stdout stays free for the chosen path.
+    exec 3>/dev/tty 4</dev/tty
+
+    local saved_stty
+    saved_stty=$(stty -g <&4)
+    stty -echo -icanon min 1 time 0 <&4
+
+    # Alternative screen buffer keeps the user's shell history visible after exit.
+    printf '\e[?1049h\e[?25l' >&3
+
+    cleanup() {
+        printf '\e[?25h\e[?1049l' >&3 2>/dev/null || true
+        stty "$saved_stty" <&4 2>/dev/null || true
+        exec 3>&- 4<&- 2>/dev/null || true
+    }
+    trap cleanup EXIT INT TERM
+
+    local selected=0
+    local result=""
+    while true; do
+        printf '\e[2J\e[H' >&3
+        printf 'Worktrees for %s\n' "$repo" >&3
+        printf '(j/k navigate, Enter or Ctrl-T select, q quit)\n\n' >&3
+        local i
+        for i in "${!paths[@]}"; do
+            local name
+            name=$(basename "${paths[$i]}")
+            if [[ $i -eq $selected ]]; then
+                printf '  \e[7m> %s\e[0m\n' "$name" >&3
+            else
+                printf '    %s\n' "$name" >&3
+            fi
+        done
+
+        local key
+        # -d '' makes NUL the delimiter so Enter (\n) is read as data, not consumed as a terminator.
+        IFS= read -rsn1 -d '' key <&4 || break
+        case "$key" in
+            j)
+                if (( selected < ${#paths[@]} - 1 )); then
+                    selected=$((selected + 1))
+                fi
+                ;;
+            k)
+                if (( selected > 0 )); then
+                    selected=$((selected - 1))
+                fi
+                ;;
+            $'\n'|$'\r'|$'\x14')
+                result="${paths[$selected]}"
+                break
+                ;;
+            q)
+                break
+                ;;
+            $'\e')
+                # Distinguish a bare Esc from an arrow-key escape sequence.
+                # The timeout needs to be long enough for the terminal to
+                # deliver the rest of the CSI sequence after the ESC byte.
+                local rest=""
+                IFS= read -rsn2 -t 0.05 rest <&4 || true
+                case "$rest" in
+                    '[A')
+                        if (( selected > 0 )); then
+                            selected=$((selected - 1))
+                        fi
+                        ;;
+                    '[B')
+                        if (( selected < ${#paths[@]} - 1 )); then
+                            selected=$((selected + 1))
+                        fi
+                        ;;
+                    '')
+                        break
+                        ;;
+                esac
+                ;;
+        esac
+    done
+
+    # Restore the terminal while saved_stty is still in scope. If left to the
+    # EXIT trap, cleanup would fire in global scope where the local is unbound
+    # and `set -u` would error before stty restores the terminal.
+    cleanup
+    trap - EXIT INT TERM
+
+    if [[ -n "$result" ]]; then
+        printf '%s\n' "$result"
+    fi
+}
+
+main() {
+    if [[ $# -eq 0 ]]; then
+        local repo
+        repo=$(read_repo)
+        tui_select "$repo"
+        return
+    fi
+
+    case "$1" in
+        set-repo)
+            shift
+            cmd_set_repo "$@"
+            ;;
+        -h|--help|help)
+            usage
+            ;;
+        *)
+            echo "Unknown command: $1" >&2
+            usage
+            exit 1
+            ;;
+    esac
+}
+
+main "$@"
