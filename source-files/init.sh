@@ -7,7 +7,7 @@ source_files='env '\
 'prompt '\
 'git-completion '\
 'work '\
-'workweed '\
+'grover '\
 'ynotes'
 
 for source_file in $source_files; do

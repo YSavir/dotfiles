@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-# Adapter from workweed's post-create hook contract to retirable's
-# bin/setup-worktree, which takes the primary checkout as a positional arg.
-set -euo pipefail
-exec "$WORKWEED_WORKTREE_PATH/bin/setup-worktree" "$WORKWEED_REPO_PATH"

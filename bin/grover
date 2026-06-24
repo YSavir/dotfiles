@@ -1,41 +1,41 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-CONFIG_FILE="$HOME/.workweedconfig"
+CONFIG_FILE="$HOME/.groverconfig"
 
 usage() {
     cat >&2 <<'EOF'
 Usage:
-  workweed                          Browse worktrees of the configured repo.
+  grover                          Browse worktrees of the configured repo.
                                     j/k or arrows navigate, Enter selects, q/Esc quits.
-  workweed set-repo <path>          Configure the repo to monitor.
-  workweed add <branch> <name>      Create a worktree at <repo>/../worktrees/<name>
+  grover set-repo <path>          Configure the repo to monitor.
+  grover add <branch> <name>      Create a worktree at <repo>/../worktrees/<name>
                                     checking out <branch>. If <branch> doesn't exist,
                                     creates it from the current HEAD. Runs the
                                     post-create hook if configured.
-  workweed remove [-f] <name>       Remove the worktree at <repo>/../worktrees/<name>.
+  grover remove [-f] <name>       Remove the worktree at <repo>/../worktrees/<name>.
                                     Refuses if the worktree is dirty or the pre-remove
                                     hook fails; pass -f/--force to remove anyway and
                                     skip the hook. Leaves the branch in place.
-  workweed set-hook <event> <path>  Configure a hook script for an event. Events:
+  grover set-hook <event> <path>  Configure a hook script for an event. Events:
                                       post-create  runs after `add`, inside the new
                                                    worktree. Non-zero exit is a warning.
                                       pre-remove   runs before `remove`, inside the
                                                    worktree being removed. Non-zero exit
                                                    aborts the removal.
                                     Hooks receive these env vars:
-                                      WORKWEED_REPO_PATH, WORKWEED_WORKTREE_PATH,
-                                      WORKWEED_BRANCH, WORKWEED_NAME.
+                                      GROVER_REPO_PATH, GROVER_WORKTREE_PATH,
+                                      GROVER_BRANCH, GROVER_NAME.
 EOF
 }
 
 read_repo() {
     local repo=""
     if [[ -f "$CONFIG_FILE" ]]; then
-        repo=$(git config --file "$CONFIG_FILE" workweed.repo 2>/dev/null) || repo=""
+        repo=$(git config --file "$CONFIG_FILE" grover.repo 2>/dev/null) || repo=""
     fi
     if [[ -z "$repo" ]]; then
-        echo "No repo configured. Run: workweed set-repo <path>" >&2
+        echo "No repo configured. Run: grover set-repo <path>" >&2
         exit 1
     fi
     if [[ ! -d "$repo" ]]; then
@@ -67,7 +67,7 @@ is_registered_worktree() {
 
 cmd_set_repo() {
     if [[ $# -lt 1 ]]; then
-        echo "Usage: workweed set-repo <path>" >&2
+        echo "Usage: grover set-repo <path>" >&2
         exit 1
     fi
     local input="$1"
@@ -80,13 +80,13 @@ cmd_set_repo() {
         echo "Not a git repository: $resolved" >&2
         exit 1
     fi
-    git config --file "$CONFIG_FILE" workweed.repo "$resolved"
+    git config --file "$CONFIG_FILE" grover.repo "$resolved"
     echo "Configured repo: $resolved" >&2
 }
 
 cmd_set_hook() {
     if [[ $# -lt 2 ]]; then
-        echo "Usage: workweed set-hook <event> <path>" >&2
+        echo "Usage: grover set-hook <event> <path>" >&2
         echo "  Events: post-create, pre-remove" >&2
         exit 1
     fi
@@ -94,8 +94,8 @@ cmd_set_hook() {
     local input="$2"
     local config_key
     case "$event" in
-        post-create) config_key="workweed.post-create-hook" ;;
-        pre-remove)  config_key="workweed.pre-remove-hook" ;;
+        post-create) config_key="grover.post-create-hook" ;;
+        pre-remove)  config_key="grover.pre-remove-hook" ;;
         *)
             echo "Unknown event: $event (must be post-create or pre-remove)" >&2
             exit 1
@@ -130,7 +130,7 @@ current_worktree_head() {
 
 # Run the configured hook for <event> from inside <worktree_path>.
 # Hook receives env vars:
-#   WORKWEED_REPO_PATH, WORKWEED_WORKTREE_PATH, WORKWEED_BRANCH, WORKWEED_NAME
+#   GROVER_REPO_PATH, GROVER_WORKTREE_PATH, GROVER_BRANCH, GROVER_NAME
 # Returns 0 if no hook is configured or the hook succeeds. Prints a diagnostic
 # to stderr and returns non-zero if the hook is not executable or exits
 # non-zero. Callers decide whether failure is fatal.
@@ -138,8 +138,8 @@ run_hook() {
     local event="$1" repo="$2" worktree_path="$3" branch="$4" name="$5"
     local config_key
     case "$event" in
-        post-create) config_key="workweed.post-create-hook" ;;
-        pre-remove)  config_key="workweed.pre-remove-hook" ;;
+        post-create) config_key="grover.post-create-hook" ;;
+        pre-remove)  config_key="grover.pre-remove-hook" ;;
     esac
     local hook
     hook=$(git config --file "$CONFIG_FILE" "$config_key" 2>/dev/null) || return 0
@@ -150,10 +150,10 @@ run_hook() {
     fi
     if ! (
         cd "$worktree_path"
-        WORKWEED_REPO_PATH="$repo" \
-        WORKWEED_WORKTREE_PATH="$worktree_path" \
-        WORKWEED_BRANCH="$branch" \
-        WORKWEED_NAME="$name" \
+        GROVER_REPO_PATH="$repo" \
+        GROVER_WORKTREE_PATH="$worktree_path" \
+        GROVER_BRANCH="$branch" \
+        GROVER_NAME="$name" \
         "$hook" >&2
     ); then
         echo "$event hook exited with non-zero status" >&2
@@ -163,7 +163,7 @@ run_hook() {
 
 cmd_add() {
     if [[ $# -lt 2 ]]; then
-        echo "Usage: workweed add <branch> <name>" >&2
+        echo "Usage: grover add <branch> <name>" >&2
         exit 1
     fi
     local branch="$1"
@@ -220,7 +220,7 @@ cmd_remove() {
     done
 
     if [[ $# -lt 1 ]]; then
-        echo "Usage: workweed remove [-f] <name>" >&2
+        echo "Usage: grover remove [-f] <name>" >&2
         exit 1
     fi
     local name="$1"
@@ -263,7 +263,7 @@ list_worktrees() {
     git -C "$repo" worktree list --porcelain | awk '/^worktree / { print substr($0, 10) }'
 }
 
-# Print the names of worktrees managed by workweed (basenames under the
+# Print the names of worktrees managed by grover (basenames under the
 # expected worktree root), one per line. Used by shell completion.
 cmd_names() {
     local repo
@@ -308,19 +308,23 @@ tui_select() {
     local selected=0
     local result=""
     while true; do
-        printf '\e[2J\e[H' >&3
-        printf 'Worktrees for %s\n' "$repo" >&3
-        printf '(j/k navigate, Enter or Ctrl-T select, q quit)\n\n' >&3
+        # \e[?2026h/l brackets a synchronized update so terminals that support
+        # it paint the new frame atomically. \e[H + \e[K per line avoids the
+        # flicker of a full \e[2J clear by overwriting in place.
+        printf '\e[?2026h\e[H' >&3
+        printf 'Worktrees for %s\e[K\n' "$repo" >&3
+        printf '(j/k navigate, Enter or Ctrl-T select, q quit)\e[K\n\e[K\n' >&3
         local i
         for i in "${!paths[@]}"; do
             local name
             name=$(basename "${paths[$i]}")
             if [[ $i -eq $selected ]]; then
-                printf '  \e[7m> %s\e[0m\n' "$name" >&3
+                printf '  \e[7m> %s\e[0m\e[K\n' "$name" >&3
             else
-                printf '    %s\n' "$name" >&3
+                printf '    %s\e[K\n' "$name" >&3
             fi
         done
+        printf '\e[?2026l' >&3
 
         local key
         # -d '' makes NUL the delimiter so Enter (\n) is read as data, not consumed as a terminator.
