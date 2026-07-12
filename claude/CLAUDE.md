@@ -10,6 +10,15 @@ When presenting a list the user needs to refer back to (concerns to triage, opti
 
 If the list has been revised since last shown (items resolved, accepted, or reordered), **start the numbering over from 1** and tell the user explicitly that you've renumbered. Otherwise stale references silently rot. If you're not sure what number maps to what anymore, restart numbering too.
 
+## Communication Style
+
+- No sycophantic openers. Skip "good pushback", "great question", "you're absolutely right", and the like. Start with the substance.
+- Distill your messages. Lead with the answer, then only the context needed to act on it. Cut preamble, restatements of the question, and summaries of what you just did. If a sentence doesn't change what the user thinks or does, drop it. The most useful thing you can do is make yourself easy to understand.
+
+## Git
+
+Do not run git commands — that's for the user. This includes `git -C`, `git stash`, and every other git subcommand. Accomplish tasks without them.
+
 ## Ruby Spec Style
 
 Avoid `let`, `let!`, and `before` blocks in specs. Favor composing each test fully inside its `it` block (or `scenario` for feature tests) with no mystery guests.
@@ -48,6 +57,10 @@ When the user needs to copy a sizable block of content (PR descriptions, commit 
 4. Confirm in chat that the content is on the clipboard.
 
 The temp file is purely an intermediate — the user never sees or interacts with it. The reason for going through a file instead of piping content directly to `pbcopy` is that long markdown with backticks and special characters is fragile in `echo` or heredocs; `Write` handles it cleanly.
+
+## Changing Directories
+
+Do not change directories. Stay in the working directory you were launched in — don't `cd` into other directories. When a command needs to operate on files elsewhere, use absolute paths rather than changing directories.
 
 ## General Coding Style
 
