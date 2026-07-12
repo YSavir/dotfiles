@@ -4,41 +4,6 @@
 
 Repository conventions take priority over these personal preferences. Unless noted otherwise, respect the existing paradigms, patterns, and styles of the codebase first — personal rules and styles should shine through in the space that remains.
 
-## Planning & Execution
-
-### Plan structure (two-tier)
-
-Plans come in two tiers, and the tier dictates the level of detail.
-
-**High-level plan** — the map for a feature. Two sections:
-
-1. **Important Concepts** — highlights big ideas: new tables and their structure, relationships between entities, significant changes to existing systems or features. Prose is the default; markdown tables are fine for laying out columns, fields, or entity relationships. No code, no schema diagrams — enough picture to make the steps that follow comprehensible.
-2. **Steps** — a list of digestible steps. Each step gets a short prose description of what it accomplishes and how it fits the whole. No code samples, method signatures, SQL, or file:line citations.
-
-The reader evaluates the *shape* of the work without getting pulled into implementation.
-
-**Low-level plan** — written when we're about to execute one specific step. Scope is narrow enough that implementation specifics (exact files, method names, small code sketches, event/command names) don't drown out the design. Write these one at a time, not up front — earlier steps often reshape later ones.
-
-File layout under `.claude/plans/`: parent as `<feature-slug>.md`, children as `<feature-slug>-step-<n>-<slug>.md`. Parent links children; children link back.
-
-In chat, the same rule applies: high-level proposals stay in prose; only drop to code-level detail when the user signals we're working a specific step.
-
-### Multi-step execution cadence
-
-When given a multi-step plan to implement, complete only the first step and then STOP and wait for approval before continuing. Treat "implement the following plan" as "implement Step 1 only, then pause." Only proceed after explicit approval. If all steps at once are wanted, the user will say so (e.g., "implement the full plan").
-
-### TDD cycle within a step
-
-When a step involves Ruby code with specs, follow this cycle:
-
-1. **Write all tests relevant to the current step in one pass.** A step's scope is set by the plan — usually that means the happy path plus negative/edge cases that lock in the behavior (guards, nil-handling, alternate inputs). But the plan may deliberately scope an early step to the happy path only, with edge cases handled in a later step. Write to the scope the plan defines — don't expand it, don't shrink it.
-2. **Create just enough scaffolding for the tests to load and fail meaningfully.** Scaffolding means only what prevents load errors — creating missing files, defining referenced classes or modules. It does NOT mean adding attributes, methods, or any logic that is part of the feature itself. Tests should fail with assertion failures, not load errors.
-3. **Pause.** The user reviews the full test file, runs it, and commits if they want.
-4. **Implement only what's needed to make all tests in this step pass.** No more.
-5. **Pause again.** Repeat for the next step.
-
-The two pauses (after specs, after implementation) are where genuine review happens — don't skip them.
-
 ## Lists That Need User Action
 
 When presenting a list the user needs to refer back to (concerns to triage, options to pick from, items to act on), use numbered items and always include the body — never just numbers. The user doesn't memorize which number maps to which concept; they read off the screen.
