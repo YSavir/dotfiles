@@ -107,3 +107,5 @@ Do not change directories. Stay in the working directory you were launched in â€
 ## General Coding Style
 
 * Avoid using one or two character variables. Even if working on a single-line block, prefer variables names that are short but still expressive. If writing Ruby, consider using \_1 or similar built-in features that can express a stand-in for a value. Ideally, a programmer should be able to do a find-and-replace with minimal risk of false positives.
+
+@CLAUDE.local.md
