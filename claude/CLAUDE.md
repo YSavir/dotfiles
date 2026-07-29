@@ -105,6 +105,35 @@ The temp file is purely an intermediate — the user never sees or interacts wit
 
 Do not change directories. Stay in the working directory you were launched in — don't `cd` into other directories. When a command needs to operate on files elsewhere, use absolute paths rather than changing directories.
 
+## Code Comments
+
+Default to writing none. Comments are visual clutter that must earn their keep. A reader who can recover the same understanding from the code itself doesn't need one, and every added comment is another thing that can rot out of sync with the code.
+
+A comment earns its keep only when removing it would leave a competent reader of the language stuck or misled about the code it's attached to. Concretely, that means:
+
+- A **hidden constraint** — an invariant, ordering requirement, or precondition the code depends on but doesn't state.
+- A **non-obvious choice** — a decision that looks arbitrary or suboptimal but is deliberate (e.g. "linear scan because N is bounded at 8 and this avoids the allocation").
+- A **workaround for external behavior** — describe the shape of the upstream bug, spec quirk, or platform limitation the code compensates for (e.g. "MySQL 5.7 truncates DECIMAL(20) at 15 digits"). Reference a specific ticket or link only when tying the workaround to that exact source is a strong requirement (audit trail, or the ticket carries context the comment can't compress). A bare ticket ID with no explanation of what's being worked around is worse than nothing.
+- A **surprise for the reader** — a genuinely counterintuitive behavior a competent reader would misread on first pass.
+- A **source citation** — where a formula, algorithm, or magic number came from (paper, RFC, vendor doc).
+
+Do **not** write a comment that:
+
+- Restates what the code says (`# increment counter` above `counter += 1`).
+- Names intent the identifier already carries (`# validate the user` above `def validate_user`).
+- Describes cross-file relationships ("used by the checkout flow", "called from AdminController", "added for the reset-password feature"). That belongs in the PR description; here it just rots.
+- Narrates the task or fix ("added to handle the case from issue #NNN", "fixes the bug where…"). Git history and PRs already carry this.
+- Repeats what surrounding structure makes obvious (section-divider banners, "# helper methods").
+- Explains WHAT when the WHAT is legible from the code.
+
+**Scope.** A comment explains the code block it's attached to, not the codebase. Cross-cutting narrative belongs in module-level docs, PR descriptions, or design docs, not inline prose next to a function. When in doubt, cut anything that reaches outside the block; if the only load-bearing content was cross-file context, the whole comment goes.
+
+**Docstrings** (RDoc / YARD / JSDoc / Python triple-quoted, and equivalents) follow the same rules. A docstring that only restates the signature is noise. A docstring that captures a non-obvious contract (e.g. "returns nil, not [], when no records match — callers rely on this") is load-bearing. Don't add a docstring for coverage.
+
+**Not comments in this sense.** These rules govern prose comments about code behavior. Directive/pragma comments (`// eslint-disable-*`, `# frozen_string_literal: true`, `# noqa`, `# rubocop:disable`, shebangs), license headers, and TODO/FIXME/HACK markers are separate categories — instructions to tools or intentional trail-markers — and aren't governed by the keep-or-cut rule above.
+
+**When unsure**, cut. A missing comment is recoverable; a misleading or filler comment costs every reader.
+
 ## General Coding Style
 
 * Avoid using one or two character variables. Even if working on a single-line block, prefer variables names that are short but still expressive. If writing Ruby, consider using \_1 or similar built-in features that can express a stand-in for a value. Ideally, a programmer should be able to do a find-and-replace with minimal risk of false positives.
