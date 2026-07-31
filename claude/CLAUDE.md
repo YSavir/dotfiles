@@ -125,10 +125,17 @@ Do **not** write a comment that:
 - Narrates the task or fix ("added to handle the case from issue #NNN", "fixes the bug where…"). Git history and PRs already carry this.
 - Repeats what surrounding structure makes obvious (section-divider banners, "# helper methods").
 - Explains WHAT when the WHAT is legible from the code.
+- States a fact the reader can recover by tracing one method call within the same file (the **one-hop rule**). Inline comments carry facts that stay local; anything one hop away belongs in module docs or the PR description, not next to the method.
+- Documents a return type or return shape when no downstream caller depends on that shape structurally. In dynamic languages every return is implicit; "a reader might not know the type" isn't a real bar.
+- In a spec, restates the `it` / `describe` / `context` string it lives under. The docstring is already the label; a comment underneath it is duplication.
 
-**Scope.** A comment explains the code block it's attached to, not the codebase. Cross-cutting narrative belongs in module-level docs, PR descriptions, or design docs, not inline prose next to a function. When in doubt, cut anything that reaches outside the block; if the only load-bearing content was cross-file context, the whole comment goes.
+**Scope.** A comment explains the code block it's attached to, not the codebase. Cross-cutting narrative belongs in module-level docs, PR descriptions, or design docs, not inline prose next to a function. When in doubt, cut anything that reaches outside the block; if the only load-bearing content was cross-file context, the whole comment goes. Smell test: if the comment mentions two or more collaborators by name, it's design-doc content in the wrong place.
 
 **Docstrings** (RDoc / YARD / JSDoc / Python triple-quoted, and equivalents) follow the same rules. A docstring that only restates the signature is noise. A docstring that captures a non-obvious contract (e.g. "returns nil, not [], when no records match — callers rely on this") is load-bearing. Don't add a docstring for coverage.
+
+**Class- and module-level docstrings default to cut.** A prose block above a `class` or `module` declaration that summarizes what the class is or does is a WHAT restatement, even when phrased as "documents invariants," "documents the lifecycle," or "documents the contract." Keep one only when it names a *specific* hidden invariant that isn't visible from the class's public method surface and that a caller would misuse the class without knowing. "Documents design" is a rationalization; if you can't name the specific hidden fact in one sentence, cut.
+
+**Justification test for kept comments.** Before keeping or writing a comment, name — in one sentence, out loud — the specific hidden constraint / external workaround / source citation / counterintuitive interaction it captures. Generic defenses ("documents design," "documents invariants," "documents the contract," "documents the lifecycle," "readers might not know") don't count; if the specific fact won't fit in that sentence, the comment doesn't earn its keep.
 
 **Not comments in this sense.** These rules govern prose comments about code behavior. Directive/pragma comments (`// eslint-disable-*`, `# frozen_string_literal: true`, `# noqa`, `# rubocop:disable`, shebangs), license headers, and TODO/FIXME/HACK markers are separate categories — instructions to tools or intentional trail-markers — and aren't governed by the keep-or-cut rule above.
 

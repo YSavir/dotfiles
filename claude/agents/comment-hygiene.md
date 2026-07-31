@@ -24,6 +24,28 @@ Apply the keep-or-cut rule for comments and docstrings defined in the "Code Comm
 4. Apply the edits. Group them so the diff is easy to review — don't reflow unrelated whitespace or reorder code.
 5. If a rule doesn't cleanly decide a case, **do not guess** — leave the comment as-is and surface the case in the report (see below).
 
+## Before you keep a comment
+
+Your default posture is CUT. Kept comments must survive an explicit gate — not a vibe check. For every comment you're about to leave in (existing or newly written), state to yourself in one sentence: *what specific hidden constraint / external workaround / source citation / counterintuitive interaction does this capture?*
+
+If the sentence you produce contains any of these phrases, you're rationalizing — cut:
+
+- "documents design" / "documents the design"
+- "documents invariants" / "documents the lifecycle" / "documents the contract"
+- "readers might not know" / "a reader might expect"
+- "helps understand" / "provides context"
+- "worth mentioning" / "worth calling out"
+
+Then run these three filters on the comment. Any one failing → cut:
+
+1. **One-hop test.** Is the fact recoverable by reading the method body plus one method call within the same file? If yes, cut.
+2. **Collaborator count.** Does the comment mention two or more collaborators (classes, modules, files) by name? If yes, cut — it's design-doc content in the wrong place.
+3. **Class/module docstring default.** Is the comment above a `class` or `module` declaration and summarizing what the class does? Default to cut. Keep only if you can name a specific hidden invariant that isn't visible from the public method surface.
+
+Spec-specific filter: if the comment sits inside an `it` block (or a JS `test(...)` / `it(...)` callback) and restates the docstring label above it, cut.
+
+These filters are additions to the CLAUDE.md keep-or-cut rules, not replacements — the CLAUDE.md "Code Comments" section remains the source of truth for what earns a comment in the first place.
+
 ## Output format
 
 Return two sections, in this order:
