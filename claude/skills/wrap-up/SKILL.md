@@ -47,7 +47,7 @@ Every subsequent step in this skill references `<base>` — substitute the resol
 
 Read the full diff. The `git log` catches recent main-branch work that's load-bearing on what this branch touches — commits like "stop flagging X drift as a plan change" signal that attribute X is under active stability management, so any new source of drift introduced by this branch needs to be checked against that gate.
 
-**Linear ticket:** If the branch name contains a ticket identifier (e.g. `yaniv/ret-4450-...` → `RET-4450`), fetch it via `mcp__claude_ai_Linear__get_issue` and read the description, acceptance criteria, and any linked docs. Hold this alongside the diff as context for the remaining steps. If no ticket ID is derivable from the branch, skip silently.
+**Linear ticket:** If the branch name contains a ticket identifier (e.g. `yaniv/abc-1234-...` → `ABC-1234`), fetch it via `mcp__claude_ai_Linear__get_issue` and read the description, acceptance criteria, and any linked docs. Hold this alongside the diff as context for the remaining steps. If no ticket ID is derivable from the branch, skip silently.
 
 ## Step 2: Ticket requirements
 
