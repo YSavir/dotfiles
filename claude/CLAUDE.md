@@ -13,7 +13,37 @@ If the list has been revised since last shown (items resolved, accepted, or reor
 ## Communication Style
 
 - No sycophantic openers. Skip "good pushback", "great question", "you're absolutely right", and the like. Start with the substance.
+- No self-labeling flourishes. Don't preface statements with tags that editorialize about their own candor or directness — "Straight answer:", "The honest answer:", "The honest tension:", "To be honest", "Frankly", "honesty caveat", "Real talk", and the like. They're throat-clearing, and labeling one statement "honest" implies the others aren't. Just say the thing plainly without announcing that you're being plain.
 - Distill your messages. Lead with the answer, then only the context needed to act on it. Cut preamble, restatements of the question, and summaries of what you just did. If a sentence doesn't change what the user thinks or does, drop it. The most useful thing you can do is make yourself easy to understand.
+
+## Formatting
+
+Communication Style covers *what* to say; this covers *how* to lay it out on the page.
+
+### Structure
+
+Avoid long stretches of unbroken prose. A wall of paragraphs is hard to skim, and the important pieces get buried in it.
+
+- Any lengthy response should mix communication structures — prose, lists, tables, headers/sections — rather than running as continuous prose.
+- Match the structure to the shape of the information, not at random: prose for reasoning and narrative, lists for enumerable items, tables for comparisons across shared dimensions, sections for distinct topics the reader may want to jump between.
+- Prose still earns its place where ideas connect and flow into each other. The goal is a good fit, not maximum fragmentation — don't shatter a coherent argument into disconnected bullets.
+
+### Structure to length
+
+Structure should be proportional to the length and complexity of what you're saying. The rule above pushes toward structure; this is its counterweight.
+
+- A short answer stays plain — don't dress a two- or three-sentence reply in headers, tables, or nested bullets.
+- Reserve headers, tables, and multi-level lists for responses long enough that the reader needs help navigating them.
+- When in doubt, under-structure. Scaffolding on a small answer is more distracting than the wall of prose it's trying to prevent.
+
+### Inline emphasis
+
+Go easy on inline backticks and bold. Code blocks are always fine, but a sentence peppered with backticked names — or with half its clauses bolded — becomes a jumble of highlighted fragments that's harder to read than plain text. When everything is emphasized, nothing is.
+
+- Backtick a symbol when it genuinely needs to be set apart — the first mention, or where precision matters (an exact flag, a path the user will copy).
+- When listing many filenames/classnames/method names in prose, don't backtick every one. Let most sit as plain words, or pull the set into a list or table where the structure does the separating.
+- Bold sparingly — a few key terms per response, not a running highlight. If a whole paragraph is bold-heavy, none of it stands out.
+- The test for both: would the highlighting help the reader find or copy this, or is it just visual noise? If it's noise, drop it.
 
 ## Git
 
@@ -60,8 +90,16 @@ The temp file is purely an intermediate — the user never sees or interacts wit
 
 ## Changing Directories
 
-Do not change directories. Stay in the working directory you were launched in — don't `cd` into other directories. When a command needs to operate on files elsewhere, use absolute paths rather than changing directories.
+Run every command exactly as it would run from the working directory you were launched in, and leave the shell in that directory. A command should never begin with a directory change or contain one — no changing directory before the real command, and no directory-change step chained ahead of it. When a command needs to act on files elsewhere, point it there with an absolute path or the tool's own directory flag (e.g. `-C`, `--cwd`, `--prefix`) instead.
 
 ## General Coding Style
 
 * Avoid using one or two character variables. Even if working on a single-line block, prefer variables names that are short but still expressive. If writing Ruby, consider using \_1 or similar built-in features that can express a stand-in for a value. Ideally, a programmer should be able to do a find-and-replace with minimal risk of false positives.
+
+## Tooling Choices
+
+Reach for basic coreutils (`cp`, `mv`, `tar`, `ls`, etc.) instead of more advanced libraries or tools unless there's a specific need or the user asks for the more advanced option. Don't reach for `rsync` when `cp` does the job.
+
+## Scope of Work
+
+Only do what the user asked. Don't go above and beyond to seem smarter or more capable — no unrequested extra steps, verification output, or embellishments.
