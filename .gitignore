@@ -6,3 +6,5 @@ source-files/work.sh
 *.sw
 
 .irb_history
+
+**/.claude/settings.local.json

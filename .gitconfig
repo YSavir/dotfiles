@@ -6,7 +6,16 @@
 [core]
 	editor = vim
 	excludesfile = /Users/Yaniv/.gitignore
-	pager = diff-so-fancy | less --tabs=4 -RFX
+	pager = delta
+
+[interactive]
+    diffFilter = delta --color-only
+    light = true
+
+[delta]
+    navigate = true
+    line-numbers = true
+
 [color "status"]
 	added = green
   deleted = magenta
@@ -14,3 +23,5 @@
   changed = blue
 [init]
 	defaultBranch = main
+[merge]
+    conflictStyle = zdiff3
